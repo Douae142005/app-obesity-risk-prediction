@@ -1,1 +1,0 @@
-# app-obesity-risk-prediction
