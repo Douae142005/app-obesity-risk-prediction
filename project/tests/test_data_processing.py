@@ -104,3 +104,18 @@ def test_expected_columns(sample_data):
     ]
     for col in expected_cols:
         assert col in sample_data.columns, f"Colonne manquante : {col}"
+# ============================================
+# TEST 4 — Types des colonnes numériques
+# ============================================
+
+def test_numeric_columns_type(sample_data):
+    """
+    Vérifie que les colonnes numériques sont bien en float.
+    Relation avec optimize_memory() dans data_processing.py :
+    → après optimisation, elles doivent rester numériques.
+    """
+    numeric_cols = ['Age', 'Height', 'Weight', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE']
+    for col in numeric_cols:
+        assert pd.api.types.is_numeric_dtype(sample_data[col]), \
+            f"Colonne {col} devrait être numérique"
+
