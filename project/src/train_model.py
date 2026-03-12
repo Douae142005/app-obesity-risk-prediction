@@ -196,3 +196,23 @@ def select_best_model(results):
     print("="*60)
     
     return best
+# ============================================
+# 5. SAUVEGARDE
+# ============================================
+
+def save_best_model(best_result):
+    """Sauvegarde le meilleur modèle."""
+    
+    if not best_result:
+        return
+    
+    try:
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        models_dir = os.path.join(project_root, 'models')
+        os.makedirs(models_dir, exist_ok=True)
+
+        model_path = os.path.join(models_dir, 'best_model.pkl')
+        joblib.dump(best_result['model'], model_path)
+        print(f"\n✅ Modèle sauvegardé: {model_path}")
+    except Exception as e:
+        print(f"❌ Erreur sauvegarde: {e}")
