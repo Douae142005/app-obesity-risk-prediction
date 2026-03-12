@@ -84,11 +84,11 @@ if __name__ == "__main__":
     print("="*50)
     
     test = TestModelTraining()
-  test.test_model_prediction()
+    test.test_create_models()
+    test.test_model_files_exist()
+    test.test_model_prediction()
     
     print("\n" + "="*50)
     print("🎉 TOUS LES TESTS MODÈLES SONT PASSÉS !")
     print("="*50) 
-
-
 
