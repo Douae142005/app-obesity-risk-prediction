@@ -72,4 +72,56 @@ def make_predictions(model, X_test):
  
     print(f"✅ Prédictions générées — {len(y_pred)} patients")
     return y_pred, y_proba
- 
+ # ============================================
+# 3. MÉTRIQUES COMPLÈTES
+# ============================================
+
+def compute_metrics(y_test, y_pred, y_proba, classes):
+    """Calcule et affiche toutes les métriques d'évaluation."""
+
+    print("\n" + "="*60)
+    print("📊 MÉTRIQUES GLOBALES")
+    print("="*60)
+
+    accuracy  = accuracy_score(y_test, y_pred)
+    # F1-Macro : poids égal par classe — adapté car classes équilibrées (~12-15%)
+    f1_macro  = f1_score(y_test, y_pred, average='macro')
+    # F1-Weighted : pondéré par taille de classe — cohérent avec train_model.py
+    f1_weighted = f1_score(y_test, y_pred, average='weighted')
+
+    # ROC-AUC nécessite y_proba — mesure la capacité de discrimination globale
+    try:
+        y_test_bin = label_binarize(y_test, classes=classes)
+        roc_auc = roc_auc_score(y_test_bin, y_proba, multi_class='ovr', average='macro')
+    except Exception as e:
+        print(f"   ⚠️ ROC-AUC non calculé : {e}")
+        roc_auc = None
+
+    print(f"   Accuracy   : {accuracy:.4f}")
+    print(f"   F1-Macro   : {f1_macro:.4f}")
+    print(f"   F1-Weighted: {f1_weighted:.4f}")
+    if roc_auc:
+        print(f"   ROC-AUC    : {roc_auc:.4f}")
+
+    # Interprétation automatique — alerte si performances insuffisantes
+    print("\n🩺 Interprétation clinique :")
+    if roc_auc:
+        if roc_auc >= 0.95:
+            print("   🟢 Excellent — modèle fiable pour aide à la décision")
+        elif roc_auc >= 0.85:
+            print("   🟡 Correct — supervision médicale recommandée")
+        else:
+            print("   🔴 Insuffisant — ne pas utiliser en production")
+
+    # Rapport détaillé par classe (precision/recall/F1 pour chacune des 7 classes)
+    print("\n" + "="*60)
+    print("📋 RAPPORT PAR CLASSE")
+    print("="*60)
+    print(classification_report(y_test, y_pred, target_names=[str(c) for c in classes]))
+
+    return {
+        'accuracy'   : accuracy,
+        'f1_macro'   : f1_macro,
+        'f1_weighted': f1_weighted,
+        'roc_auc'    : roc_auc
+    }
