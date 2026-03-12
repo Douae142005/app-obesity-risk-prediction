@@ -59,3 +59,17 @@ def load_best_model():
     print(f"✅ Modèle chargé : {model_path}")
     print(f"   Type : {type(model).__name__}")
     return model
+# ============================================
+# 2. PRÉDICTIONS
+# ============================================
+ 
+def make_predictions(model, X_test):
+    """Génère y_pred (classes) et y_proba (probabilités)."""
+ 
+    y_pred = model.predict(X_test)
+    # y_proba nécessaire pour ROC-AUC et l'affichage du % confiance dans Streamlit
+    y_proba = model.predict_proba(X_test)
+ 
+    print(f"✅ Prédictions générées — {len(y_pred)} patients")
+    return y_pred, y_proba
+ 
