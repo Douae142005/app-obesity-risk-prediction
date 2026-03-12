@@ -13,7 +13,6 @@ import pandas as pd
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from train_model import create_models
 
-
 class TestModelTraining:
     """Tests pour l'entraînement des modèles."""
 
@@ -43,7 +42,8 @@ class TestModelTraining:
         
         print("✅ test_model_files_exist passé")
 
-   
+    def test_model_prediction(self):
+        """Test que le modèle peut faire des prédictions."""
         try:
             project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
             model_path = os.path.join(project_root, 'models', 'best_model.pkl')
@@ -77,5 +77,18 @@ class TestModelTraining:
         except Exception as e:
             print(f"❌ Erreur: {e}")
             raise
+
+if __name__ == "__main__":
+    print("\n" + "="*50)
+    print("🧪 TESTS DES MODÈLES")
+    print("="*50)
+    
+    test = TestModelTraining()
+  test.test_model_prediction()
+    
+    print("\n" + "="*50)
+    print("🎉 TOUS LES TESTS MODÈLES SONT PASSÉS !")
+    print("="*50) 
+
 
 
