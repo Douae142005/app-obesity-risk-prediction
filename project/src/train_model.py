@@ -175,3 +175,24 @@ def train_all_models(X_train, X_test, y_train, y_test):
     
     return results
 
+
+# ============================================
+# 4. SÉLECTION DU MEILLEUR MODÈLE
+# ============================================
+
+def select_best_model(results):
+    """Sélectionne le meilleur modèle."""
+    
+    if not results:
+        print("\n❌ Aucun modèle disponible")
+        return None
+    
+    best = max(results, key=lambda x: x['accuracy'])
+    
+    print("\n" + "="*60)
+    print(f"🏆 MEILLEUR MODÈLE: {best['model_name']}")
+    print(f"   Accuracy: {best['accuracy']:.4f}")
+    print(f"   F1-Score: {best['f1_score']:.4f}")
+    print("="*60)
+    
+    return best
