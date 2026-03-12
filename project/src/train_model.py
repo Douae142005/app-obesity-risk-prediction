@@ -100,5 +100,78 @@ def evaluate_model(model, X_test, y_test, model_name, classes):
     except Exception as e:
         print(f"❌ Erreur évaluation {model_name}: {e}")
         return None
+# ============================================
+# 3. ENTRAÎNEMENT DES MODÈLES (3 SEULEMENT)
+# ============================================
 
+def train_all_models(X_train, X_test, y_train, y_test):
+    """Entraîne les 3 modèles demandés."""
+    
+    results = []
+    classes = sorted(y_train.unique())
+    
+    # 1. RANDOM FOREST
+    print("\n" + "="*60)
+    print("1️⃣  RANDOM FOREST")
+    print("="*60)
+    
+    try:
+        print("   Entraînement en cours...")
+        rf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+        rf.fit(X_train, y_train)
+        print("   ✅ Random Forest entraîné")
+        
+        result = evaluate_model(rf, X_test, y_test, "Random Forest", classes)
+        if result:
+            results.append(result)
+    except Exception as e:
+        print(f"❌ Erreur Random Forest: {e}")
+    
+    # 2. XGBOOST
+    print("\n" + "="*60)
+    print("2️⃣  XGBOOST")
+    print("="*60)
+    
+    try:
+        from xgboost import XGBClassifier
+        print("   ✅ XGBoost importé")
+        
+        print("   Entraînement en cours...")
+        xgb = XGBClassifier(n_estimators=100, random_state=42, verbosity=0, use_label_encoder=False)
+        xgb.fit(X_train, y_train)
+        print("   ✅ XGBoost entraîné")
+        
+        result = evaluate_model(xgb, X_test, y_test, "XGBoost", classes)
+        if result:
+            results.append(result)
+    except ImportError:
+        print("   ❌ XGBoost non installé - installation recommandée:")
+        print("   pip install xgboost")
+    except Exception as e:
+        print(f"   ❌ Erreur XGBoost: {e}")
+    
+    # 3. LIGHTGBM
+    print("\n" + "="*60)
+    print("3️⃣  LIGHTGBM")
+    print("="*60)
+    
+    try:
+        from lightgbm import LGBMClassifier
+        print("   ✅ LightGBM importé")
+        
+        print("   Entraînement en cours...")
+        lgb = LGBMClassifier(n_estimators=100, random_state=42, verbose=-1)
+        lgb.fit(X_train, y_train)
+        print("   ✅ LightGBM entraîné")
+        
+        result = evaluate_model(lgb, X_test, y_test, "LightGBM", classes)
+        if result:
+            results.append(result)
+    except ImportError:
+        print("   ❌ LightGBM non installé - installation recommandée:")
+        print("   pip install lightgbm")
+    except Exception as e:
+        print(f"   ❌ Erreur LightGBM: {e}")
+    
+    return results
 
