@@ -87,3 +87,20 @@ def test_no_missing_values(sample_data):
     assert sample_data.isnull().sum().sum() == 0, \
         "Des valeurs manquantes ont été détectées"
 
+# ============================================
+# TEST 3 — Colonnes attendues présentes
+# ============================================
+
+def test_expected_columns(sample_data):
+    """
+    Vérifie que toutes les colonnes nécessaires sont présentes.
+    Si une colonne est renommée par erreur → test échoue.
+    """
+    expected_cols = [
+        'Gender', 'Age', 'Height', 'Weight',
+        'family_history_with_overweight', 'FAVC', 'FCVC',
+        'NCP', 'CAEC', 'SMOKE', 'CH2O', 'SCC', 'FAF',
+        'TUE', 'CALC', 'MTRANS', 'NObeyesdad'
+    ]
+    for col in expected_cols:
+        assert col in sample_data.columns, f"Colonne manquante : {col}"
