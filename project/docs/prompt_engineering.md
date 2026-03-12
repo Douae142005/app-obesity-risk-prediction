@@ -52,16 +52,16 @@ def optimize_memory(df):
     return df
 ```
 
-**Résultat sur notre dataset :**
+Résultat sur notre dataset :
 - Avant : **1174.91 KB** → Après : **1108.94 KB** → Réduction : **5.6%** ✅
 
-**Efficacité :** ⭐⭐⭐⭐⭐
+Efficacité : ⭐⭐⭐⭐⭐
 
 ---
 
 ### Prompt 1.2 — Pipeline complet
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Crée un fichier data_processing.py complet pour un projet ML de classification
 d'obésité. Le fichier doit contenir ces fonctions dans l'ordre :
@@ -77,15 +77,15 @@ d'obésité. Le fichier doit contenir ces fonctions dans l'ordre :
 Ajoute des commentaires en français et des print [INFO] pour chaque étape.
 ```
 
-**Amélioration apportée :** Ajout de `os.path.abspath` pour chemins relatifs portables
+Amélioration apportée : Ajout de `os.path.abspath` pour chemins relatifs portables
 
-**Efficacité :** ⭐⭐⭐⭐ — Liste numérotée très efficace pour code structuré
+Efficacité : ⭐⭐⭐⭐ — Liste numérotée très efficace pour code structuré
 
 ---
 
 ### Prompt 1.3 — Correction warning pandas
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 J'ai ce warning dans mon code Python :
 "FutureWarning: For backward compatibility, 'str' dtypes are included
@@ -93,7 +93,7 @@ by select_dtypes when 'object' dtype is specified"
 Comment le corriger ?
 ```
 
-**Résultat :**
+Résultat :
 ```python
 # Avant
 categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
@@ -101,7 +101,7 @@ categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
 categorical_cols = df.select_dtypes(include=['object', 'str']).columns.tolist()
 ```
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Copier-coller exact du message d'erreur très efficace
+Efficacité : ⭐⭐⭐⭐⭐ — Copier-coller exact du message d'erreur très efficace
 
 ---
 
@@ -113,13 +113,13 @@ categorical_cols = df.select_dtypes(include=['object', 'str']).columns.tolist()
 
 ### Prompt 2.1 — Chargement et exploration initiale
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 # Load obesity dataset from UCI and display basic statistics
 # Show shape, head, columns, dtypes and missing values
 ```
 
-**Résultat obtenu :**
+Résultat obtenu :
 ```python
 from ucimlrepo import fetch_ucirepo
 dataset = fetch_ucirepo(id=544)
@@ -128,13 +128,13 @@ print("Shape:", df.shape)
 print(df.isnull().sum())
 ```
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Copilot excelle dans la complétion contextuelle
+Efficacité :⭐⭐⭐⭐⭐ — Copilot excelle dans la complétion contextuelle
 
 ---
 
 ### Prompt 2.2 — Visualisations EDA
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 # Plot class distribution of NObeyesdad with seaborn countplot
 # Show percentages and use viridis palette
@@ -142,15 +142,15 @@ print(df.isnull().sum())
 # Then plot correlation heatmap with coolwarm colormap
 ```
 
-**Observation :** Dataset équilibré (12.9% - 16.6%) → pas d'oversampling ✅
+**Observation : Dataset équilibré (12.9% - 16.6%) → pas d'oversampling ✅
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Commentaires courts donnent d'excellents résultats
+Efficacité : ⭐⭐⭐⭐⭐ — Commentaires courts donnent d'excellents résultats
 
 ---
 
 ### Prompt 2.3 — Interface Streamlit
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 # Streamlit app for obesity risk prediction
 # Load model from models/best_model.pkl
@@ -159,9 +159,9 @@ print(df.isnull().sum())
 # Display SHAP explanation plot below prediction
 ```
 
-**Résultat :** Structure complète de `app.py` avec sidebar + prédiction + SHAP
+Résultat :Structure complète de `app.py` avec sidebar + prédiction + SHAP
 
-**Efficacité :** ⭐⭐⭐⭐ — Très efficace pour UI Streamlit
+Efficacité :⭐⭐⭐⭐ — Très efficace pour UI Streamlit
 
 ---
 
@@ -173,7 +173,7 @@ print(df.isnull().sum())
 
 ### Prompt 3.1 — train_model.py
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Je dois entraîner 4 modèles de classification multiclasse (7 classes)
 pour prédire le niveau d'obésité :
@@ -194,13 +194,13 @@ Génère un tableau comparatif final avec pandas DataFrame.
 | LightGBM | ~0.96 | ~0.96 | ~0.99 |
 | CatBoost | ~0.95 | ~0.95 | ~0.99 |
 
-**Efficacité :** ⭐⭐⭐⭐⭐
+Efficacité : ⭐⭐⭐⭐⭐
 
 ---
 
 ### Prompt 3.2 — Tests pytest
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Génère des tests pytest complets pour un pipeline ML d'obésité.
 Les tests doivent vérifier :
@@ -211,15 +211,15 @@ Les tests doivent vérifier :
 Utilise des fixtures pytest avec un DataFrame fictif de 5 patients.
 ```
 
-**Résultat :** 8 tests dans `test_data_processing.py` + `test_model.py` ✅
+Résultat : 8 tests dans `test_data_processing.py` + `test_model.py` ✅
 
-**Efficacité :** ⭐⭐⭐⭐⭐
+Efficacité : ⭐⭐⭐⭐⭐
 
 ---
 
 ### Prompt 3.3 — GitHub Actions CI/CD
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Génère un fichier .github/workflows/ci.yml pour un projet ML Python.
 Le workflow doit :
@@ -230,7 +230,7 @@ Le workflow doit :
 - Échouer si un test échoue
 ```
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Excellent pour YAML et configurations DevOps
+Efficacité : ⭐⭐⭐⭐⭐ — Excellent pour YAML et configurations DevOps
 
 ---
 
@@ -242,7 +242,7 @@ Le workflow doit :
 
 ### Prompt 4.1 — Optimisation evaluate_model.py
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Voici mon fichier evaluate_model.py qui génère des métriques ML.
 Il est lent sur le calcul ROC-AUC multiclasse avec 7 classes.
@@ -253,7 +253,7 @@ Optimise-le en :
 4. Générant les graphiques (confusion matrix + ROC curves) en parallèle
 ```
 
-**Résultat obtenu :** Code 40% plus rapide avec numpy vectorisé + gestion d'erreurs robuste
+Résultat obtenu : Code 40% plus rapide avec numpy vectorisé + gestion d'erreurs robuste
 
 **Efficacité :** ⭐⭐⭐⭐⭐ — DeepSeek excelle dans l'optimisation de code existant
 
@@ -261,7 +261,7 @@ Optimise-le en :
 
 ### Prompt 4.2 — Debugging SHAP
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 J'ai cette erreur avec SHAP sur un modèle LightGBM multiclasse :
 "ValueError: multioutput is not supported"
@@ -269,7 +269,7 @@ Mon code : shap_values = explainer.shap_values(X_test)
 Comment corriger pour afficher un summary_plot correct ?
 ```
 
-**Résultat obtenu :**
+Résultat obtenu :
 ```python
 # Correction DeepSeek
 explainer = shap.TreeExplainer(model)
@@ -278,13 +278,13 @@ shap_values = explainer.shap_values(X_test)
 shap.summary_plot(shap_values[0], X_test, show=False)
 ```
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Très efficace pour debugging d'erreurs spécifiques
+Efficacité : ⭐⭐⭐⭐⭐ — Très efficace pour debugging d'erreurs spécifiques
 
 ---
 
 ### Prompt 4.3 — Refactoring data_processing.py
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Refactorise ce code data_processing.py pour le rendre plus robuste :
 - Ajoute des type hints sur toutes les fonctions
@@ -293,9 +293,9 @@ Refactorise ce code data_processing.py pour le rendre plus robuste :
 - Ajoute une validation des colonnes attendues au chargement
 ```
 
-**Résultat :** Code plus maintenable avec validation automatique du schéma ✅
+Résultat : Code plus maintenable avec validation automatique du schéma ✅
 
-**Efficacité :** ⭐⭐⭐⭐ — Excellent pour refactoring et bonnes pratiques
+Efficacité : ⭐⭐⭐⭐ — Excellent pour refactoring et bonnes pratiques
 
 ---
 
@@ -307,7 +307,7 @@ Refactorise ce code data_processing.py pour le rendre plus robuste :
 
 ### Prompt 5.1 — Génération structure projet
 
-**Prompt utilisé :**
+Prompt utilisé :
 ```
 Generate a bash script that creates the complete project structure for
 a Python ML project with this exact architecture:
@@ -319,7 +319,7 @@ Also create a .gitignore for Python ML projects.
 
 **Résultat obtenu :** Script bash complet + `.gitignore` adapté ML ✅
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Codex excelle dans la génération de scripts shell
+Efficacité : ⭐⭐⭐⭐⭐ — Codex excelle dans la génération de scripts shell
 
 ---
 
@@ -337,7 +337,7 @@ Requirements:
 - Use non-root user for security
 ```
 
-**Résultat obtenu :**
+Résultat obtenu :
 ```dockerfile
 FROM python:3.11-slim
 WORKDIR /app
@@ -349,7 +349,7 @@ EXPOSE 8501
 CMD ["streamlit", "run", "app/app.py", "--server.port=8501"]
 ```
 
-**Efficacité :** ⭐⭐⭐⭐⭐ — Idéal pour DevOps et containerisation
+Efficacité :⭐⭐⭐⭐⭐ — Idéal pour DevOps et containerisation
 
 ---
 
