@@ -216,3 +216,55 @@ def save_best_model(best_result):
         print(f"\n✅ Modèle sauvegardé: {model_path}")
     except Exception as e:
         print(f"❌ Erreur sauvegarde: {e}")
+# ============================================
+# 6. TABLEAU COMPARATIF
+# ============================================
+
+def print_comparison_table(results):
+    """Affiche un tableau comparatif."""
+    
+    if not results:
+        print("\n❌ Aucun résultat à comparer")
+        return
+    
+    df = pd.DataFrame([{
+        'Modèle': r['model_name'],
+        'Accuracy': round(r['accuracy'], 4),
+        'F1-Score': round(r['f1_score'], 4)
+    } for r in results])
+    
+    print("\n📊 COMPARAISON DES MODÈLES:")
+    print(df.to_string(index=False))
+
+
+# ============================================
+# 7. EXÉCUTION PRINCIPALE
+# ============================================
+
+if __name__ == "__main__":
+    
+    try:
+        # Prétraitement
+        print("\n📥 Chargement des données...")
+        X_train, X_test, y_train, y_test, label_encoders, scaler = preprocess_pipeline()
+        print("✅ Données prêtes")
+        print(f"   Train: {X_train.shape}")
+        print(f"   Test: {X_test.shape}")
+
+        # Entraînement
+        results = train_all_models(X_train, X_test, y_train, y_test)
+
+        # Résultats
+        if results:
+            print_comparison_table(results)
+            best = select_best_model(results)
+            save_best_model(best)
+        else:
+            print("\n❌ Aucun modèle n'a été entraîné")
+
+    except Exception as e:
+        print(f"\n❌ Erreur générale: {e}")
+
+    print("\n" + "="*60)
+    print("✅ ENTRAÎNEMENT TERMINÉ")
+    print("="*60)
