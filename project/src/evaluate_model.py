@@ -154,3 +154,37 @@ def plot_confusion_matrix_final(y_test, y_pred, classes, outputs_dir):
     except Exception as e:
         print(f"   ⚠️ Erreur matrice : {e}")
 
+# ============================================
+# 5. COURBES ROC
+# ============================================
+
+def plot_roc_curves(y_test, y_proba, classes, outputs_dir):
+    """Trace une courbe ROC par classe (One-vs-Rest) — nécessite y_proba."""
+
+    try:
+        print("\n📈 Génération courbes ROC...")
+        y_test_bin = label_binarize(y_test, classes=classes)
+        n_classes  = len(classes)
+
+        plt.figure(figsize=(10, 7))
+
+        for i in range(n_classes):
+            fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_proba[:, i])
+            roc_auc_i   = auc(fpr, tpr)
+            plt.plot(fpr, tpr, lw=1.5, label=f"{classes[i]} (AUC={roc_auc_i:.2f})")
+
+        # Diagonale = modèle aléatoire (AUC=0.5) — référence visuelle
+        plt.plot([0, 1], [0, 1], 'k--', lw=1, label='Aléatoire (AUC=0.50)')
+        plt.xlabel('Taux de Faux Positifs')
+        plt.ylabel('Taux de Vrais Positifs')
+        plt.title('Courbes ROC — Une courbe par classe (One-vs-Rest)')
+        plt.legend(loc='lower right', fontsize=8)
+        plt.tight_layout()
+
+        path = os.path.join(outputs_dir, 'roc_curves.png')
+        plt.savefig(path)
+        plt.close()
+        print(f"   ✅ Sauvegardée : {path}")
+
+    except Exception as e:
+        print(f"   ⚠️ Erreur ROC : {e}")
