@@ -125,3 +125,32 @@ def compute_metrics(y_test, y_pred, y_proba, classes):
         'f1_weighted': f1_weighted,
         'roc_auc'    : roc_auc
     }
+# ============================================
+# 4. MATRICE DE CONFUSION FINALE
+# ============================================
+
+def plot_confusion_matrix_final(y_test, y_pred, classes, outputs_dir):
+    """Matrice de confusion du meilleur modèle sur X_test complet."""
+
+    try:
+        print("\n📊 Génération matrice de confusion finale...")
+        plt.figure(figsize=(10, 8))
+        cm = confusion_matrix(y_test, y_pred)
+
+        # Normalisation en % pour lisibilité (annot affiche les valeurs brutes aussi)
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=classes, yticklabels=classes)
+
+        plt.title('Matrice de Confusion — Meilleur Modèle (Test Set)')
+        plt.xlabel('Prédit')
+        plt.ylabel('Réel')
+        plt.tight_layout()
+
+        path = os.path.join(outputs_dir, 'confusion_matrix_final.png')
+        plt.savefig(path)
+        plt.close()
+        print(f"   ✅ Sauvegardée : {path}")
+
+    except Exception as e:
+        print(f"   ⚠️ Erreur matrice : {e}")
+
