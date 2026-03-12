@@ -119,3 +119,20 @@ def test_numeric_columns_type(sample_data):
         assert pd.api.types.is_numeric_dtype(sample_data[col]), \
             f"Colonne {col} devrait être numérique"
 
+# ============================================
+# TEST 5 — Valeurs de la colonne cible valides
+# ============================================
+
+def test_target_values(sample_data):
+    """
+    Vérifie que NObeyesdad ne contient que des classes connues.
+    Si une classe inconnue apparaît → l'encodeur plantera en production.
+    """
+    valid_classes = {
+        'Insufficient_Weight', 'Normal_Weight',
+        'Overweight_Level_I', 'Overweight_Level_II',
+        'Obesity_Type_I', 'Obesity_Type_II', 'Obesity_Type_III'
+    }
+    actual_classes = set(sample_data['NObeyesdad'].unique())
+    unknown = actual_classes - valid_classes
+    assert len(unknown) == 0, f"Classes inconnues détectées : {unknown}"
