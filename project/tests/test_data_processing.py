@@ -136,3 +136,20 @@ def test_target_values(sample_data):
     actual_classes = set(sample_data['NObeyesdad'].unique())
     unknown = actual_classes - valid_classes
     assert len(unknown) == 0, f"Classes inconnues détectées : {unknown}"
+# ============================================
+# TEST 6 — Valeurs binaires cohérentes
+# ============================================
+
+def test_binary_columns_values(sample_data):
+    """
+    Vérifie que FAVC, SMOKE, SCC ne contiennent que 'yes' ou 'no'.
+    Relation avec encode_categorical() :
+    → le map {'yes':1, 'no':0} plante si une autre valeur existe.
+    """
+    binary_cols = ['FAVC', 'SMOKE', 'SCC']
+    valid_values = {'yes', 'no'}
+    for col in binary_cols:
+        actual = set(sample_data[col].unique())
+        invalid = actual - valid_values
+        assert len(invalid) == 0, \
+            f"Colonne {col} contient des valeurs invalides : {invalid}"
