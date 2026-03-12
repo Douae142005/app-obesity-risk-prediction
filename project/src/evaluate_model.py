@@ -188,3 +188,39 @@ def plot_roc_curves(y_test, y_proba, classes, outputs_dir):
 
     except Exception as e:
         print(f"   ⚠️ Erreur ROC : {e}")
+# ============================================
+# 6. EXÉCUTION PRINCIPALE
+# ============================================
+
+if __name__ == "__main__":
+
+    try:
+        # --- Données : même pipeline que train_model.py (random_state=42 garanti) ---
+        print("\n📥 Chargement des données...")
+        X_train, X_test, y_train, y_test, label_encoders, scaler = preprocess_pipeline()
+        print(f"✅ Données prêtes — Test : {X_test.shape}")
+
+        classes = sorted(y_test.unique())
+
+        # --- Dossier outputs pour les graphiques ---
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        outputs_dir  = os.path.join(project_root, 'outputs')
+        os.makedirs(outputs_dir, exist_ok=True)
+
+        # --- Pipeline d'évaluation ---
+        model            = load_best_model()
+        y_pred, y_proba  = make_predictions(model, X_test)
+        metrics          = compute_metrics(y_test, y_pred, y_proba, classes)
+
+        plot_confusion_matrix_final(y_test, y_pred, classes, outputs_dir)
+        plot_roc_curves(y_test, y_proba, classes, outputs_dir)
+
+    except FileNotFoundError as e:
+        print(e)
+    except Exception as e:
+        print(f"\n❌ Erreur générale : {e}")
+
+    print("\n" + "="*60)
+    print("✅ ÉVALUATION TERMINÉE")
+    print("="*60)
+
