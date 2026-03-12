@@ -125,3 +125,102 @@ def compute_metrics(y_test, y_pred, y_proba, classes):
         'f1_weighted': f1_weighted,
         'roc_auc'    : roc_auc
     }
+# ============================================
+# 4. MATRICE DE CONFUSION FINALE
+# ============================================
+
+def plot_confusion_matrix_final(y_test, y_pred, classes, outputs_dir):
+    """Matrice de confusion du meilleur modèle sur X_test complet."""
+
+    try:
+        print("\n📊 Génération matrice de confusion finale...")
+        plt.figure(figsize=(10, 8))
+        cm = confusion_matrix(y_test, y_pred)
+
+        # Normalisation en % pour lisibilité (annot affiche les valeurs brutes aussi)
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=classes, yticklabels=classes)
+
+        plt.title('Matrice de Confusion — Meilleur Modèle (Test Set)')
+        plt.xlabel('Prédit')
+        plt.ylabel('Réel')
+        plt.tight_layout()
+
+        path = os.path.join(outputs_dir, 'confusion_matrix_final.png')
+        plt.savefig(path)
+        plt.close()
+        print(f"   ✅ Sauvegardée : {path}")
+
+    except Exception as e:
+        print(f"   ⚠️ Erreur matrice : {e}")
+
+# ============================================
+# 5. COURBES ROC
+# ============================================
+
+def plot_roc_curves(y_test, y_proba, classes, outputs_dir):
+    """Trace une courbe ROC par classe (One-vs-Rest) — nécessite y_proba."""
+
+    try:
+        print("\n📈 Génération courbes ROC...")
+        y_test_bin = label_binarize(y_test, classes=classes)
+        n_classes  = len(classes)
+
+        plt.figure(figsize=(10, 7))
+
+        for i in range(n_classes):
+            fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_proba[:, i])
+            roc_auc_i   = auc(fpr, tpr)
+            plt.plot(fpr, tpr, lw=1.5, label=f"{classes[i]} (AUC={roc_auc_i:.2f})")
+
+        # Diagonale = modèle aléatoire (AUC=0.5) — référence visuelle
+        plt.plot([0, 1], [0, 1], 'k--', lw=1, label='Aléatoire (AUC=0.50)')
+        plt.xlabel('Taux de Faux Positifs')
+        plt.ylabel('Taux de Vrais Positifs')
+        plt.title('Courbes ROC — Une courbe par classe (One-vs-Rest)')
+        plt.legend(loc='lower right', fontsize=8)
+        plt.tight_layout()
+
+        path = os.path.join(outputs_dir, 'roc_curves.png')
+        plt.savefig(path)
+        plt.close()
+        print(f"   ✅ Sauvegardée : {path}")
+
+    except Exception as e:
+        print(f"   ⚠️ Erreur ROC : {e}")
+# ============================================
+# 6. EXÉCUTION PRINCIPALE
+# ============================================
+
+if __name__ == "__main__":
+
+    try:
+        # --- Données : même pipeline que train_model.py (random_state=42 garanti) ---
+        print("\n📥 Chargement des données...")
+        X_train, X_test, y_train, y_test, label_encoders, scaler = preprocess_pipeline()
+        print(f"✅ Données prêtes — Test : {X_test.shape}")
+
+        classes = sorted(y_test.unique())
+
+        # --- Dossier outputs pour les graphiques ---
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        outputs_dir  = os.path.join(project_root, 'outputs')
+        os.makedirs(outputs_dir, exist_ok=True)
+
+        # --- Pipeline d'évaluation ---
+        model            = load_best_model()
+        y_pred, y_proba  = make_predictions(model, X_test)
+        metrics          = compute_metrics(y_test, y_pred, y_proba, classes)
+
+        plot_confusion_matrix_final(y_test, y_pred, classes, outputs_dir)
+        plot_roc_curves(y_test, y_proba, classes, outputs_dir)
+
+    except FileNotFoundError as e:
+        print(e)
+    except Exception as e:
+        print(f"\n❌ Erreur générale : {e}")
+
+    print("\n" + "="*60)
+    print("✅ ÉVALUATION TERMINÉE")
+    print("="*60)
+
