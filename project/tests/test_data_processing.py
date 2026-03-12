@@ -74,3 +74,16 @@ def test_dataframe_shape(sample_data):
         f"Attendu 17 colonnes, obtenu {sample_data.shape[1]}"
 
 
+# ============================================
+# TEST 2 — Pas de valeurs manquantes
+# ============================================
+
+def test_no_missing_values(sample_data):
+    """
+    Vérifie qu'il n'y a aucun NaN dans le DataFrame.
+    Relation avec data_processing.py :
+    → handle_missing_values() doit garantir 0 NaN en sortie.
+    """
+    assert sample_data.isnull().sum().sum() == 0, \
+        "Des valeurs manquantes ont été détectées"
+
