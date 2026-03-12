@@ -153,3 +153,19 @@ def test_binary_columns_values(sample_data):
         invalid = actual - valid_values
         assert len(invalid) == 0, \
             f"Colonne {col} contient des valeurs invalides : {invalid}"
+# ============================================
+# TEST 7 — Valeurs ordinales cohérentes
+# ============================================
+
+def test_ordinal_columns_values(sample_data):
+    """
+    Vérifie que CAEC et CALC ne contiennent que les 4 niveaux attendus.
+    Relation avec encode_categorical() :
+    → OrdinalEncoder échoue si un niveau inconnu est présent.
+    """
+    valid_ordinal = {'no', 'Sometimes', 'Frequently', 'Always'}
+    for col in ['CAEC', 'CALC']:
+        actual = set(sample_data[col].unique())
+        invalid = actual - valid_ordinal
+        assert len(invalid) == 0, \
+            f"Colonne {col} contient des valeurs invalides : {invalid}"
