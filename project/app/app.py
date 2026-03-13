@@ -182,9 +182,9 @@ section[data-testid="stSidebar"] * {
 # le titre et le badge de l'école
 st.markdown("""
 <div class="hero-section">
-    <div class="hero-title">🏥 ObesityAI</div>
+    <div class="hero-title">🏥 NutriScan </div>
     <div class="hero-subtitle">
-        Outil d'aide à la décision médicale basé sur l'IA
+        Prédiction intelligente du risque d'obésité par LightGBM
     </div>
     <div class="hero-badge">
         🎓 Centrale Casablanca – Coding Week 2026
@@ -199,11 +199,11 @@ st.markdown("""
 # clés du projet
 c1, c2, c3, c4, c5 = st.columns(5)
 stats = [
-    ("2111", "Patients",   "👥"),
-    ("17",   "Variables",  "📊"),
-    ("7",    "Niveaux",    "🎯"),
-    ("3",    "Modèles ML", "🤖"),
-    ("96%+", "Précision",  "✅"),
+    ("2111", "Patients",  "👥"),
+    ("17",   "Variables", "📊"),
+    ("7",    "Niveaux",   "🎯"),
+    ("1",    "Modèle ML", "🤖"),
+    ("97%+", "Précision", "✅"),
 ]
 for col, (num, label, icon) in zip([c1,c2,c3,c4,c5], stats):
     col.markdown(f"""
