@@ -619,3 +619,23 @@ if __name__ == "__main__":
         failed_tests.append(f"test_github_workflow_exists: {e}")
     total_tests += 1
     
+    # ============================================
+    # RÉSUMÉ FINAL
+    # ============================================
+    print("\n" + "="*70)
+    print("📊 RÉSUMÉ DES TESTS")
+    print("="*70)
+    print(f"📋 Total des tests exécutés : {total_tests}")
+    print(f"✅ Tests réussis : {passed_tests}")
+    print(f"❌ Tests échoués : {len(failed_tests)}")
+    
+    if len(failed_tests) == 0:
+        print("\n" + "="*70)
+        print("🎉🎉🎉 FÉLICITATIONS ! TOUS LES TESTS SONT PASSÉS ! 🎉🎉🎉")
+        print("="*70)
+    else:
+        print("\n❌ Tests en échec :")
+        for fail in failed_tests:
+            print(f"   - {fail}")
+    
+    print("\n✅ EXÉCUTION TERMINÉE")
