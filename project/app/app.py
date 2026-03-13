@@ -114,7 +114,6 @@ st.markdown(f"""
     background: rgba(10, 30, 50, 0.3);
 }}
 
-/* Hero section */
 .hero-section {{
     background: linear-gradient(
         135deg,
@@ -152,7 +151,6 @@ st.markdown(f"""
     border: 1px solid rgba(255,255,255,0.3);
 }}
 
-/* ✅ Cartes formulaire BLANC OPAQUE */
 .form-card {{
     background: rgba(255,255,255,0.97) !important;
     border-radius: 18px;
@@ -170,22 +168,19 @@ st.markdown(f"""
     border-bottom: 2px solid #f0f4f8;
 }}
 
-/* ✅ Forcer les labels des inputs en noir */
-.form-card label,
-.form-card .stSelectbox label,
-.form-card .stNumberInput label {{
+/* ✅ Labels Genre, Âge, Taille... visibles */
+.stSelectbox label,
+.stNumberInput label,
+.stTextInput label {{
     color: #1a3c5e !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    background: rgba(255,255,255,0.95) !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    display: inline-block !important;
 }}
 
-/* ✅ Fond blanc pour les inputs */
-.stSelectbox > div > div,
-.stNumberInput > div > div > input {{
-    background: white !important;
-    color: #1a3c5e !important;
-}}
-
-/* Bouton analyser */
 .stButton>button {{
     background: linear-gradient(135deg, #1a3c5e, #2980b9);
     color: white !important;
@@ -198,7 +193,6 @@ st.markdown(f"""
     box-shadow: 0 5px 20px rgba(41,128,185,0.4);
 }}
 
-/* Carte résultat */
 .result-card {{
     border-radius: 18px;
     padding: 2rem;
@@ -212,7 +206,6 @@ st.markdown(f"""
     margin: 0.5rem 0;
 }}
 
-/* Sidebar */
 section[data-testid="stSidebar"] {{
     background: linear-gradient(
         180deg,
@@ -224,21 +217,18 @@ section[data-testid="stSidebar"] * {{
     color: white !important;
 }}
 
-/* Texte blanc sur les autres pages */
 .stMarkdown p, h1, h2, h3 {{
     color: white !important;
 }}
 
-/* ✅ À propos : fond blanc lisible */
 .apropos-card {{
     background: rgba(255,255,255,0.95);
     border-radius: 18px;
     padding: 2rem;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    color: #1a3c5e !important;
 }}
 .apropos-card h3, .apropos-card p,
-.apropos-card li {{
+.apropos-card li, .apropos-card b {{
     color: #1a3c5e !important;
 }}
 </style>
@@ -359,7 +349,16 @@ if page == "🏠 Accueil":
 # PAGE : ANALYSE PATIENT
 # ============================================
 elif page == "👤 Analyse Patient":
-    st.markdown("## 👤 Analyse du Patient")
+    st.markdown("""
+    <div style="background:rgba(255,255,255,0.92);
+                border-radius:15px; padding:1rem 1.5rem;
+                margin-bottom:1rem;">
+        <h2 style="color:#1a3c5e; margin:0;">
+            👤 Analyse du Patient
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns(2)
 
     with col1:
