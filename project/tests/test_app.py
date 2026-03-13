@@ -101,6 +101,7 @@ class TestAppDataProcessing:
         
         print("✅ test_donnees_patient_structure passé")
 
+
     def test_colonnes_numeriques(self):
         """Test la liste des colonnes numériques."""
         # Définition locale car la variable n'est pas exportée
