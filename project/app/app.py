@@ -113,7 +113,7 @@ st.markdown(f"""
 
 /* Overlay sombre sur toute la page */
 .stApp {{
-    background: rgba(10, 30, 50, 0.75);
+    background: rgba(10, 30, 50, 0.3);
 }}
 
 /* Hero section */
@@ -518,35 +518,108 @@ elif page == "👤 Analyse Patient":
             st.warning(f"⚠️ SHAP non disponible : {e}")
 
 # ============================================
-# PAGE : STATISTIQUES
+# PAGE : STATISTIQUES AMÉLIORÉE
 # ============================================
 elif page == "📊 Statistiques":
-    st.markdown("## 📊 Statistiques du Dataset")
+    st.markdown("## 📊 Statistiques du Dataset Obesity Risk")
+
     try:
         from ucimlrepo import fetch_ucirepo
-        dataset = fetch_ucirepo(id=544)
+        dataset = fetch_ucirepo(id=544)  # dataset UCI
         X = dataset.data.features
         y = dataset.data.targets
         df = pd.concat([X, y], axis=1)
 
+        # -------------------------------
+        # 1️⃣ Informations générales
+        # -------------------------------
         col1, col2, col3 = st.columns(3)
-        col1.metric("👥 Patients", "2111")
-        col2.metric("📊 Variables", "17")
-        col3.metric("🎯 Classes", "7")
+        col1.metric("👥 Patients", df.shape[0])
+        col2.metric("📊 Variables", df.shape[1])
+        col3.metric("🎯 Classes", y.nunique())
 
+        st.markdown("---")
+
+        # -------------------------------
+        # 2️⃣ Distribution des niveaux d'obésité
+        # -------------------------------
         st.markdown("### Distribution des niveaux d'obésité")
-        fig, ax = plt.subplots(figsize=(10, 4))
-        fig.patch.set_alpha(0.0)
-        ax.set_facecolor('none')
-        y.value_counts().plot(
-            kind='bar', ax=ax, color='#2980b9')
+        fig, ax = plt.subplots(figsize=(10,4))
+        y.value_counts().plot(kind="bar", ax=ax, color="#2980b9")
         ax.set_xlabel("Niveau d'obésité", color='white')
         ax.set_ylabel("Nombre de patients", color='white')
         ax.tick_params(colors='white')
         plt.xticks(rotation=45, color='white')
+        fig.patch.set_alpha(0.0)
+        ax.set_facecolor('none')
         plt.tight_layout()
         st.pyplot(fig)
         plt.close()
+
+        st.markdown("---")
+
+        # -------------------------------
+        # 3️⃣ Statistiques des variables physiques
+        # -------------------------------
+        st.markdown("### Statistiques des variables physiques")
+        phys_vars = ['Age', 'Height', 'Weight']
+        st.dataframe(df[phys_vars].describe().T)
+
+        st.markdown("---")
+
+        # -------------------------------
+        # 4️⃣ Corrélation des variables importantes
+        # -------------------------------
+        st.markdown("### Corrélation entre variables importantes")
+        corr_vars = ['Age','Height','Weight','FCVC','FAF','TUE']
+        corr = df[corr_vars].corr()
+
+        fig, ax = plt.subplots(figsize=(6,4))
+        im = ax.imshow(corr, cmap="Blues")
+
+        ax.set_xticks(range(len(corr.columns)))
+        ax.set_yticks(range(len(corr.columns)))
+        ax.set_xticklabels(corr.columns, rotation=45)
+        ax.set_yticklabels(corr.columns)
+
+        # Affichage des valeurs de corrélation sur la heatmap
+        for i in range(len(corr.columns)):
+            for j in range(len(corr.columns)):
+                ax.text(j, i, f"{corr.iloc[i,j]:.2f}",
+                        ha="center", va="center", color="black", fontsize=9)
+
+        fig.patch.set_alpha(0.0)
+        ax.set_facecolor('none')
+        st.pyplot(fig)
+        plt.close()
+
+        st.markdown("---")
+
+        # -------------------------------
+        # 5️⃣ Histogrammes des variables clés
+        # -------------------------------
+        st.markdown("### Distribution de l'âge et du poids")
+        col1, col2 = st.columns(2)
+
+        with col1:
+            fig, ax = plt.subplots()
+            df['Age'].hist(ax=ax, bins=10, color="#2ecc71")
+            ax.set_xlabel("Âge")
+            ax.set_ylabel("Nombre de patients")
+            ax.set_title("Distribution de l'âge")
+            fig.patch.set_alpha(0.0)
+            st.pyplot(fig)
+            plt.close()
+
+        with col2:
+            fig, ax = plt.subplots()
+            df['Weight'].hist(ax=ax, bins=10, color="#e74c3c")
+            ax.set_xlabel("Poids (kg)")
+            ax.set_ylabel("Nombre de patients")
+            ax.set_title("Distribution du poids")
+            fig.patch.set_alpha(0.0)
+            st.pyplot(fig)
+            plt.close()
 
     except Exception as e:
         st.warning(f"⚠️ Dataset non disponible : {e}")
@@ -572,11 +645,11 @@ elif page == "👥 Notre Équipe":
     with col_noms:
         st.markdown("### 👩‍💻 Les membres")
         membres = [
-            ("Meryem",   "#3498db"),
-            ("Amina",    "#2ecc71"),
-            ("Douaa",    "#e74c3c"),
-            ("Hajar AZ", "#f39c12"),
-            ("Hajar D",  "#9b59b6"),
+            ("Meryem Querchi",   "#3498db"),
+            ("Amina Boutalmaouine ",    "#2ecc71"),
+            ("Douae Amghar",    "#e74c3c"),
+            ("Hajar Azoud", "#f39c12"),
+            ("Hajar Dyaz",  "#9b59b6"),
         ]
         for nom, color in membres:
             st.markdown(f"""
