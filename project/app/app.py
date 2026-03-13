@@ -168,17 +168,20 @@ st.markdown(f"""
     border-bottom: 2px solid #f0f4f8;
 }}
 
-/* ✅ Labels Genre, Âge, Taille... visibles */
+/* ✅ Labels élégants */
 .stSelectbox label,
 .stNumberInput label,
 .stTextInput label {{
-    color: #1a3c5e !important;
+    color: white !important;
     font-weight: 700 !important;
-    font-size: 1rem !important;
-    background: rgba(255,255,255,0.95) !important;
-    padding: 3px 8px !important;
-    border-radius: 6px !important;
+    font-size: 0.95rem !important;
+    background: linear-gradient(135deg, #1a3c5e, #2980b9) !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
     display: inline-block !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    margin-bottom: 4px !important;
 }}
 
 .stButton>button {{
