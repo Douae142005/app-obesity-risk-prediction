@@ -353,10 +353,12 @@ if page == "🏠 Accueil":
 # ============================================
 elif page == "👤 Analyse Patient":
     st.markdown("""
-    <div style="background:rgba(255,255,255,0.92);
+    <div style="background:linear-gradient(135deg,#1a3c5e,#2980b9);
                 border-radius:15px; padding:1rem 1.5rem;
-                margin-bottom:1rem;">
-        <h2 style="color:#1a3c5e; margin:0;">
+                margin-bottom:1rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <h2 style="color:white; margin:0;
+                   text-shadow:1px 1px 3px rgba(0,0,0,0.3);">
             👤 Analyse du Patient
         </h2>
     </div>
@@ -626,8 +628,7 @@ elif page == "👥 Notre Équipe":
         team_path = os.path.join(APP_DIR, 'team.jpg')
         if os.path.exists(team_path):
             st.image(team_path,
-                     caption="Notre équipe – Coding Week 2026",
-                     use_column_width=True)
+                     caption="Notre équipe – Coding Week 2026")
         else:
             st.info("📸 Ajoutez votre photo dans app/team.jpg")
 
