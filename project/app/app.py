@@ -637,8 +637,7 @@ elif page == "👥 Notre Équipe":
         team_path = os.path.join(APP_DIR, 'team.jpg')
         if os.path.exists(team_path):
             st.image(team_path,
-                     caption="Notre équipe – Coding Week 2026",
-                     use_column_width=True)
+                     caption="Notre équipe – Coding Week 2026")
         else:
             st.info("📸 Ajoutez votre photo dans app/team.jpg")
 
