@@ -474,3 +474,41 @@ elif page == "👤 Analyse Patient":
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        # ── Probabilités par niveau ──────────
+        st.markdown("### 📊 Probabilités par niveau")
+        for idx, (em, lbl, col) in niveaux.items():
+            st.progress(
+                float(probas[idx]),
+                text=f"{em} {lbl} : {probas[idx]*100:.1f}%")
+
+        # ── Explication SHAP ─────────────────
+        # SHAP explique POURQUOI le modèle
+        # a prédit ce niveau d'obésité
+        st.markdown("---")
+        st.markdown("### 🔬 Explication SHAP")
+        st.markdown("""
+        *Quelles variables ont le plus influencé
+        la prédiction ?*
+        """)
+        try:
+            # Créer l'explainer SHAP
+            explainer = shap.TreeExplainer(modele)
+
+            # Calculer les valeurs SHAP
+            shap_values = explainer.shap_values(df_sc)
+
+            # Graphique SHAP
+            fig, ax = plt.subplots(figsize=(10, 5))
+            shap.summary_plot(
+                shap_values,
+                df_sc,
+                plot_type="bar",
+                show=False
+            )
+            plt.title("Impact des variables sur la prédiction")
+            st.pyplot(fig)
+            plt.close()
+
+        except Exception as e:
+            st.warning(f"⚠️ SHAP non disponible : {e}")
