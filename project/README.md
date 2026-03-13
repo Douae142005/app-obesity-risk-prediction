@@ -253,13 +253,13 @@ Loads `best_model.pkl` and runs a complete diagnostic on the test set. Must be r
 Packages the full application for portable, environment-independent deployment.
 
 ```dockerfile
-FROM python:3.9-slim
+FROM python:3.11-slim
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
+COPY project/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY project/ .
 EXPOSE 8501
-CMD ["streamlit", "run", "app/app.py"]
+CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 ```
 
 ---
