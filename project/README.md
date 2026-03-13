@@ -394,7 +394,35 @@ Full documentation is in [`docs/prompt_engineering.md`](docs/prompt_engineering.
 Key lesson: **specificity in prompts directly reduces iteration cycles** — providing function names, expected input/output types, and desired output format in the initial prompt consistently produced working code in one shot. Vague prompts required 2–3 follow-up exchanges to reach the same result.
 
 ---
+## 🚀 Quick Start
 
+### 1. Cloner le repo
+```bash
+git clone https://github.com/Douae142005/app-obesity-risk-prediction.git
+cd app-obesity-risk-prediction/project
+```
+
+### 2. Installer les dépendances
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Entraîner le modèle
+```bash
+python src/data_processing.py
+python src/train_model.py
+python src/evaluate_model.py
+```
+
+### 4. Lancer l'application
+```bash
+streamlit run app/app.py
+```
+
+### 5. Lancer les tests
+```bash
+pytest tests/ -v
+```
 *École Centrale Casablanca · Coding Week March 2026 · Supervised by soufiane mehdi. team Data Healers: amghar douae, azoud hajar, boutalmaouine amina, dyaz hajar, querchi meryem*
 
 
