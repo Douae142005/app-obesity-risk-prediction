@@ -1,8 +1,7 @@
 # 🏥 Obesity Risk Estimation — Medical Decision Support Application
-
 > **Coding Week · 09–15 March 2026 · École Centrale Casablanca**  
 > An explainable machine learning tool to help physicians estimate patient obesity risk based on lifestyle and physical conditions.
-
+![CI](https://github.com/Douae142005/app-obesity-risk-prediction/actions/workflows/ci.yml/badge.svg)
 ---
 
 ## I. Project Overview
@@ -77,6 +76,7 @@ app-obesity-risk-prediction/
 ### II.1 — `app/app.py` — Streamlit Interface
 
 The web interface built with Streamlit allows physicians to interact with the model without any technical knowledge.
+
 
 **Key points:**
 - Input form covering all 16 patient features (age, weight, height, diet, activity, etc.)
@@ -344,7 +344,57 @@ pytest tests/
 
 ## IV. Critical Questions
 
-
-
 **Was the dataset balanced? If not, how was imbalance handled?**  
 Yes — all 7 classes are distributed between ~12% and ~15% per class. The dataset is effectively balanced. `stratify=y` was used in the train/test split to preserve this distribution. No SMOTE, undersampling, or class weighting was applied. F1-Macro was used as a secondary metric to ensure equal attention to all classes regardless of minor size variations. Impact: no class was systematically under-predicted.
+
+---
+
+**Which ML model performed best? Performance metrics?**  
+**LightGBM** achieved the best results across all metrics:
+
+| Metric | Score |
+|---|---|
+| Accuracy | ~0.96 |
+| F1-Weighted | ~0.96 |
+| F1-Macro | ~0.95 |
+| ROC-AUC (macro OvR) | > 0.99 |
+
+LightGBM was selected for its speed advantage over XGBoost on this dataset size, its native SHAP compatibility via `TreeExplainer`, and its consistent superiority across all evaluation runs.
+
+---
+
+**Which medical features most influenced predictions (SHAP results)?**  
+Based on SHAP summary plots, the top drivers are:
+
+1. **Weight** — strongest single predictor across all obesity classes
+2. **Height** — interacts with weight (implicit BMI relationship)
+3. **FAF** (Physical Activity Frequency) — low activity strongly pushes toward higher obesity classes
+4. **FCVC** (Vegetable Consumption Frequency) — lower consumption linked to higher risk
+5. **Age** — moderate influence, especially for `Obesity_Type_III`
+6. **NCP** (Number of main meals per day) — eating pattern signal
+7. **CH2O** (Daily water intake) — hydration correlates with healthier weight profiles
+
+These findings are clinically coherent and reinforce physician trust in the model's predictions.
+
+---
+
+**What insights did prompt engineering provide?**  
+Full documentation is in [`docs/prompt_engineering.md`](docs/prompt_engineering.md). Summary:
+
+5 AI tools were used across the project, each assigned to the tasks that best matched their strengths:
+
+| AI Tool | Task | Key insight |
+|---|---|---|
+| **Claude** | Data processing, code explanation | Best for understanding and documenting complex pipeline logic |
+| **GitHub Copilot** | EDA, Streamlit interface | Fastest for in-editor boilerplate and repetitive UI patterns |
+| **ChatGPT (GPT-4)** | ML models, tests, CI/CD | Reliable for structured multi-step tasks like GitHub Actions config |
+| **DeepSeek Coder** | Optimization, debugging | Effective for targeted code fixes with minimal context |
+| **OpenAI Codex** | Automation, scripts | Efficient for generating standalone utility scripts |
+
+Key lesson: **specificity in prompts directly reduces iteration cycles** — providing function names, expected input/output types, and desired output format in the initial prompt consistently produced working code in one shot. Vague prompts required 2–3 follow-up exchanges to reach the same result.
+
+---
+
+*École Centrale Casablanca · Coding Week March 2026 · Supervised by soufiane mehdi. team Data Healers: amghar douae, azoud hajar, boutalmaouine amina, dyaz hajar, querchi meryem*
+
+
