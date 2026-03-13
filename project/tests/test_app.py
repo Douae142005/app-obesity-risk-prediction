@@ -262,7 +262,7 @@ class TestAppIntegration:
             path = os.path.join(project_root, dossier)
             assert os.path.exists(path), f"❌ Dossier {dossier} manquant"
         
-        print("✅ test_structure_fichiers passé")
+     print("✅ test_structure_fichiers passé")
 
 
 if __name__ == "__main__":
