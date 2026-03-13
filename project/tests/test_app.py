@@ -1,4 +1,3 @@
-
 """
 test_app.py
 -----------
@@ -46,7 +45,25 @@ class TestApp:
         except ImportError:
             pytest.skip("Fonction charger_modele non trouvée")
 
-    
+    def test_img_to_base64_exists(self):
+        """Test que la fonction img_to_base64 existe."""
+        try:
+            from app import img_to_base64
+            assert callable(img_to_base64)
+            print("✅ test_img_to_base64_exists passé")
+        except ImportError:
+            pytest.skip("Fonction img_to_base64 non trouvée")
+
+    def test_img_to_base64_fichier_inexistant(self):
+        """Test que img_to_base64 retourne vide si fichier absent."""
+        try:
+            from app import img_to_base64
+            result = img_to_base64("fichier_inexistant.jpg")
+            assert result == ""
+            print("✅ test_img_to_base64_fichier_inexistant passé")
+        except ImportError:
+            pytest.skip("Fonction img_to_base64 non trouvée")
+
 
 class TestAppDataProcessing:
     """Tests pour le traitement des données dans l'app."""
@@ -253,32 +270,4 @@ if __name__ == "__main__":
     print("📱 TESTS DE L'APPLICATION")
     print("="*60)
     
-    test = TestApp()
-    test.test_app_imports()
-    test.test_charger_modele_exists()
-    test.test_img_to_base64_exists()
-    test.test_img_to_base64_fichier_inexistant()
-    
-    test_data = TestAppDataProcessing()
-    test_data.test_donnees_patient_structure()
-    test_data.test_colonnes_numeriques()
-    test_data.test_colonnes_categorielles()
-    
-    test_pred = TestAppPredictions()
-    test_pred.test_niveaux_obesite()
-    test_pred.test_calcul_imc()
-    test_pred.test_interpretation_imc()
-    
-    test_pages = TestAppPages()
-    test_pages.test_pages_exist()
-    test_pages.test_membres_equipe()
-    test_pages.test_couleurs_membres()
-    
-    test_int = TestAppIntegration()
-    test_int.test_fichiers_essentiels_existent()
-    test_int.test_images_optionnelles()
-    test_int.test_structure_fichiers()
-    
-    print("\n" + "="*60)
-    print("✅ TOUS LES TESTS APPLICATION TERMINÉS")
-    print("="*60)
+   
