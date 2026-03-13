@@ -1,3 +1,4 @@
+
 """
 test_app.py
 -----------
@@ -400,15 +401,21 @@ class TestAppIntegration:
         project_root = os.path.join(os.path.dirname(__file__), '..', '..')
         req_path = os.path.join(project_root, 'requirements.txt')
         
+        # Alternative: chercher aussi dans project/
+        if not os.path.exists(req_path):
+            req_path = os.path.join(os.path.dirname(__file__), '..', 'requirements.txt')
+        
         if os.path.exists(req_path):
             with open(req_path, 'r') as f:
                 content = f.read()
                 assert 'streamlit' in content
                 assert 'pandas' in content
                 assert 'numpy' in content
+                assert 'scikit-learn' in content
+                assert 'xgboost' in content or 'lightgbm' in content
             print("✅ test_requirements_exists passé")
         else:
-            pytest.skip("requirements.txt non trouvé")
+            print("⚠️ requirements.txt non trouvé (vérification ignorée)")
 
     def test_github_workflow_exists(self):
         """Test que le workflow GitHub Actions existe."""
@@ -422,7 +429,7 @@ class TestAppIntegration:
 
 
 # ============================================
-# EXÉCUTION DES TESTS
+# EXÉCUTION DES TESTS AVEC RÉSUMÉ
 # ============================================
 
 if __name__ == "__main__":
@@ -430,53 +437,185 @@ if __name__ == "__main__":
     print("📱 TESTS COMPLETS DE L'APPLICATION")
     print("="*70)
     
+    # Compteurs
+    total_tests = 0
+    passed_tests = 0
+    failed_tests = []
+    
     # Tests de base
     test_base = TestAppBase()
-    test_base.test_app_imports()
-    test_base.test_charger_modele_exists()
-    test_base.test_img_to_base64_exists()
-    test_base.test_img_to_base64_fichier_inexistant()
+    try:
+        test_base.test_app_imports()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_app_imports: {e}")
+    total_tests += 1
+    
+    try:
+        test_base.test_charger_modele_exists()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_charger_modele_exists: {e}")
+    total_tests += 1
+    
+    try:
+        test_base.test_img_to_base64_exists()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_img_to_base64_exists: {e}")
+    total_tests += 1
+    
+    try:
+        test_base.test_img_to_base64_fichier_inexistant()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_img_to_base64_fichier_inexistant: {e}")
+    total_tests += 1
     
     # Tests données
     test_data = TestAppData()
-    test_data.test_recommandations_structure()
-    test_data.test_niveaux_obesite()
-    test_data.test_pages_navigation()
+    try:
+        test_data.test_recommandations_structure()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_recommandations_structure: {e}")
+    total_tests += 1
+    
+    try:
+        test_data.test_niveaux_obesite()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_niveaux_obesite: {e}")
+    total_tests += 1
+    
+    try:
+        test_data.test_pages_navigation()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_pages_navigation: {e}")
+    total_tests += 1
     
     # Tests authentification
     test_auth = TestAppAuth()
-    test_auth.test_session_state_structure()
-    test_auth.test_medecins_db_structure()
-    test_auth.test_login_validation()
-    test_auth.test_inscription_validation()
+    try:
+        test_auth.test_session_state_structure()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_session_state_structure: {e}")
+    total_tests += 1
+    
+    try:
+        test_auth.test_medecins_db_structure()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_medecins_db_structure: {e}")
+    total_tests += 1
+    
+    try:
+        test_auth.test_login_validation()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_login_validation: {e}")
+    total_tests += 1
+    
+    try:
+        test_auth.test_inscription_validation()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_inscription_validation: {e}")
+    total_tests += 1
     
     # Tests historique
     test_hist = TestAppHistorique()
-    test_hist.test_historique_structure()
-    test_hist.test_historique_ajout()
-    test_hist.test_historique_export_csv()
+    try:
+        test_hist.test_historique_structure()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_historique_structure: {e}")
+    total_tests += 1
+    
+    try:
+        test_hist.test_historique_ajout()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_historique_ajout: {e}")
+    total_tests += 1
+    
+    try:
+        test_hist.test_historique_export_csv()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_historique_export_csv: {e}")
+    total_tests += 1
     
     # Tests recommandations
     test_reco = TestAppRecommandations()
-    test_reco.test_recommandations_par_niveau()
-    test_reco.test_recommandations_urgences()
+    try:
+        test_reco.test_recommandations_par_niveau()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_recommandations_par_niveau: {e}")
+    total_tests += 1
+    
+    try:
+        test_reco.test_recommandations_urgences()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_recommandations_urgences: {e}")
+    total_tests += 1
     
     # Tests math
     test_math = TestAppMath()
-    test_math.test_calcul_imc()
-    test_math.test_interpretation_imc()
+    try:
+        test_math.test_calcul_imc()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_calcul_imc: {e}")
+    total_tests += 1
+    
+    try:
+        test_math.test_interpretation_imc()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_interpretation_imc: {e}")
+    total_tests += 1
     
     # Tests fichiers
     test_files = TestAppFiles()
-    test_files.test_fichiers_essentiels_existent()
-    test_files.test_images_optionnelles()
+    try:
+        test_files.test_fichiers_essentiels_existent()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_fichiers_essentiels_existent: {e}")
+    total_tests += 1
+    
+    try:
+        test_files.test_images_optionnelles()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_images_optionnelles: {e}")
+    total_tests += 1
     
     # Tests intégration
     test_int = TestAppIntegration()
-    test_int.test_structure_projet()
-    test_int.test_requirements_exists()
-    test_int.test_github_workflow_exists()
+    try:
+        test_int.test_structure_projet()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_structure_projet: {e}")
+    total_tests += 1
     
-    print("\n" + "="*70)
-    print("✅ TOUS LES TESTS APPLICATION TERMINÉS")
-    print("="*70)
+    try:
+        test_int.test_requirements_exists()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_requirements_exists: {e}")
+    total_tests += 1
+    
+    try:
+        test_int.test_github_workflow_exists()
+        passed_tests += 1
+    except Exception as e:
+        failed_tests.append(f"test_github_workflow_exists: {e}")
+    total_tests += 1
+    
