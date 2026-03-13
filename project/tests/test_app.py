@@ -1,10 +1,10 @@
-
 """
 test_app.py
 -----------
 Tests unitaires pour l'application Streamlit.
 Vérifie le chargement, les prédictions et l'affichage.
 """
+ 
 
 import os
 import sys
@@ -46,7 +46,25 @@ class TestApp:
         except ImportError:
             pytest.skip("Fonction charger_modele non trouvée")
 
-    
+    def test_img_to_base64_exists(self):
+        """Test que la fonction img_to_base64 existe."""
+        try:
+            from app import img_to_base64
+            assert callable(img_to_base64)
+            print("✅ test_img_to_base64_exists passé")
+        except ImportError:
+            pytest.skip("Fonction img_to_base64 non trouvée")
+
+    def test_img_to_base64_fichier_inexistant(self):
+        """Test que img_to_base64 retourne vide si fichier absent."""
+        try:
+            from app import img_to_base64
+            result = img_to_base64("fichier_inexistant.jpg")
+            assert result == ""
+            print("✅ test_img_to_base64_fichier_inexistant passé")
+        except ImportError:
+            pytest.skip("Fonction img_to_base64 non trouvée")
+
 
 class TestAppDataProcessing:
     """Tests pour le traitement des données dans l'app."""
@@ -279,6 +297,9 @@ if __name__ == "__main__":
     test_int.test_images_optionnelles()
     test_int.test_structure_fichiers()
     
+    
     print("\n" + "="*60)
     print("✅ TOUS LES TESTS APPLICATION TERMINÉS")
     print("="*60)
+
+   
