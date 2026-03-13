@@ -157,16 +157,121 @@ section[data-testid="stSidebar"] * { color: white !important; }
 # ============================================
 # HEADER PRINCIPAL avec médecin en arrière-plan
 # ============================================
-st.markdown("""
-<div class="hero-section">
-    <img src="https://cdn-icons-png.flaticon.com/512/2977/2977339.png" 
-         style="width:80px; margin-bottom:1rem;">
-    <div class="hero-title">🏥 NutriScan AI</div>
-    <div class="hero-subtitle">
-        Prédiction intelligente du risque d'obésité par LightGBM
-    </div>
-    <div class="hero-badge">
-        🎓 Centrale Casablanca – Coding Week 2026
+# Convertir les images en base64 pour le slideshow
+import base64
+
+def img_to_base64(path):
+    try:
+        with open(path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except:
+        return ""
+
+logo_b64 = img_to_base64(os.path.join(APP_DIR, 'logo.png'))
+bg1_b64  = img_to_base64(os.path.join(APP_DIR, 'bg1.jpg'))
+bg2_b64  = img_to_base64(os.path.join(APP_DIR, 'bg2.jpg'))
+bg3_b64  = img_to_base64(os.path.join(APP_DIR, 'bg3.jpg'))
+bg4_b64  = img_to_base64(os.path.join(APP_DIR, 'bg4.jpg'))
+
+st.markdown(f"""
+<style>
+.slideshow {{
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 300px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(26,60,94,0.3);
+}}
+.slide {{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: slideshow 16s infinite;
+}}
+.slide:nth-child(1) {{
+    background-image: url('data:image/jpeg;base64,{bg1_b64}');
+    animation-delay: 0s;
+}}
+.slide:nth-child(2) {{
+    background-image: url('data:image/jpeg;base64,{bg2_b64}');
+    animation-delay: 4s;
+}}
+.slide:nth-child(3) {{
+    background-image: url('data:image/jpeg;base64,{bg3_b64}');
+    animation-delay: 8s;
+}}
+.slide:nth-child(4) {{
+    background-image: url('data:image/jpeg;base64,{bg4_b64}');
+    animation-delay: 12s;
+}}
+@keyframes slideshow {{
+    0%   {{ opacity: 0; }}
+    5%   {{ opacity: 1; }}
+    25%  {{ opacity: 1; }}
+    30%  {{ opacity: 0; }}
+    100% {{ opacity: 0; }}
+}}
+.hero-overlay {{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(26,60,94,0.75) 0%,
+        rgba(41,128,185,0.65) 50%,
+        rgba(22,160,133,0.70) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}}
+.hero-title {{
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    margin: 0.5rem 0;
+}}
+.hero-subtitle {{
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.90);
+    margin-top: 0.3rem;
+}}
+.hero-badge {{
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.3);
+}}
+</style>
+
+<div class="slideshow">
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="hero-overlay">
+        <img src="data:image/png;base64,{logo_b64}"
+             style="width:80px; margin-bottom:0.5rem;
+                    border-radius:10px;">
+        <div class="hero-title">🏥 NutriScan AI</div>
+        <div class="hero-subtitle">
+            Prédiction intelligente du risque d'obésité par LightGBM
+        </div>
+        <div class="hero-badge">
+            🎓 Centrale Casablanca – Coding Week 2026
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
