@@ -512,3 +512,98 @@ elif page == "👤 Analyse Patient":
 
         except Exception as e:
             st.warning(f"⚠️ SHAP non disponible : {e}")
+# ============================================
+# PAGE : STATISTIQUES
+# ============================================
+elif page == "📊 Statistiques":
+    st.markdown("## 📊 Statistiques du Dataset")
+
+    # Charger le dataset pour les statistiques
+    try:
+        from ucimlrepo import fetch_ucirepo
+        dataset = fetch_ucirepo(id=544)
+        X = dataset.data.features
+        y = dataset.data.targets
+        df = pd.concat([X, y], axis=1)
+
+        # Statistiques générales
+        col1, col2, col3 = st.columns(3)
+        col1.metric("👥 Patients", "2111")
+        col2.metric("📊 Variables", "17")
+        col3.metric("🎯 Classes", "7")
+
+        # Distribution des classes
+        st.markdown("### Distribution des niveaux d'obésité")
+        fig, ax = plt.subplots(figsize=(10, 4))
+        y.value_counts().plot(
+            kind='bar', ax=ax, color='#2980b9')
+        ax.set_xlabel("Niveau d'obésité")
+        ax.set_ylabel("Nombre de patients")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        st.pyplot(fig)
+        plt.close()
+
+    except Exception as e:
+        st.warning(f"⚠️ Dataset non disponible : {e}")
+
+# ============================================
+# PAGE : NOTRE ÉQUIPE
+# ============================================
+elif page == "👥 Notre Équipe":
+    st.markdown("## 👥 Notre Équipe")
+    membres = [
+        ("👩‍💻", "Meryem",   "Data Processing", "#3498db"),
+        ("👩‍💻", "Amina",    "Analyse EDA",      "#2ecc71"),
+        ("👩‍💻", "Douaa",    "Modèles ML",       "#e74c3c"),
+        ("👩‍💻", "Hajar AZ", "SHAP & Évaluation","#f39c12"),
+        ("👩‍💻", "Hajar D",  "Interface",        "#9b59b6"),
+    ]
+    cols = st.columns(5)
+    for col, (icon, nom, role, color) in zip(cols, membres):
+        col.markdown(f"""
+        <div style="background:white; border-radius:15px;
+                    padding:1.5rem; text-align:center;
+                    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+                    border-top:4px solid {color};">
+            <div style="font-size:2.5rem">{icon}</div>
+            <div style="font-weight:700;
+                        color:#1a3c5e;">{nom}</div>
+            <div style="color:{color};
+                        font-size:0.85rem;">{role}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ============================================
+# PAGE : À PROPOS
+# ============================================
+elif page == "ℹ️ À propos":
+    st.markdown("## ℹ️ À propos du projet")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        ### 🎯 Objectif
+        Développer un outil clinique basé sur le ML
+        pour estimer le risque d'obésité.
+
+        ### 📁 Dataset UCI
+        - **Source** : UCI Machine Learning Repository
+        - **ID** : 544
+        - **Patients** : 2111
+        - **Variables** : 17
+        - **Classes** : 7
+        """)
+
+    with col2:
+        st.markdown("""
+        ### 🛠️ Technologies
+        - **Python** — Langage principal
+        - **Streamlit** — Interface web
+        - **XGBoost / LightGBM / RF** — Modèles ML
+        - **SHAP** — Explicabilité
+        - **GitHub Actions** — CI/CD
+
+        ### 📅 Deadline
+        **Dimanche 15 Mars 2026 à 12h00**
+        """)
