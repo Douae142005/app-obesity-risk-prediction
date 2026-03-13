@@ -8,14 +8,14 @@ import joblib
 import os
 import sys
 import shap
+import base64
 import matplotlib.pyplot as plt
-from PIL import Image
 
 # ============================================
 # CONFIGURATION DE LA PAGE
 # ============================================
 st.set_page_config(
-    page_title="NutriScan AI",
+    page_title="ObesityRisk",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -46,120 +46,8 @@ def charger_modele():
 modele, scaler, encodeurs = charger_modele()
 
 # ============================================
-# DESIGN CSS
+# CONVERSION IMAGES EN BASE64
 # ============================================
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-* { font-family: 'Inter', sans-serif; }
-
-.stApp {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-}
-
-/* Hero avec médecin en arrière-plan */
-.hero-section {
-    background: linear-gradient(135deg, 
-        rgba(26,60,94,0.92) 0%, 
-        rgba(41,128,185,0.85) 50%, 
-        rgba(22,160,133,0.90) 100%),
-        url('https://img.freepik.com/free-photo/doctor-with-stethoscope-hands-hospital-background_1423-1.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 20px;
-    padding: 4rem 2rem;
-    text-align: center;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(26,60,94,0.3);
-}
-.hero-logo {
-    width: 80px;
-    margin-bottom: 1rem;
-}
-.hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: rgba(255,255,255,0.90);
-    margin-top: 0.5rem;
-}
-.hero-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    margin-top: 1rem;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-.stat-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.2rem;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border-top: 4px solid #2980b9;
-}
-.stat-number { font-size: 2rem; font-weight: 800; color: #1a3c5e; }
-.stat-label { font-size: 0.85rem; color: #777; }
-
-.form-card {
-    background: white;
-    border-radius: 18px;
-    padding: 1.8rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 1rem;
-    border-left: 5px solid #2980b9;
-}
-.form-card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1a3c5e;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #f0f4f8;
-}
-
-.stButton>button {
-    background: linear-gradient(135deg, #1a3c5e, #2980b9);
-    color: white !important;
-    border-radius: 15px;
-    padding: 1rem 3rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-    width: 100%;
-    border: none;
-    box-shadow: 0 5px 20px rgba(41,128,185,0.4);
-}
-
-.result-card {
-    border-radius: 18px;
-    padding: 2rem;
-    text-align: center;
-    margin: 1rem 0;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-.result-title { font-size: 1.8rem; font-weight: 800; margin: 0.5rem 0; }
-
-section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #1a3c5e 0%, #2c3e50 100%);
-}
-section[data-testid="stSidebar"] * { color: white !important; }
-</style>
-""", unsafe_allow_html=True)
-
-# ============================================
-# HEADER PRINCIPAL avec médecin en arrière-plan
-# ============================================
-# Convertir les images en base64 pour le slideshow
-import base64
-
 def img_to_base64(path):
     try:
         with open(path, "rb") as f:
@@ -173,15 +61,22 @@ bg2_b64  = img_to_base64(os.path.join(APP_DIR, 'bg2.jpg'))
 bg3_b64  = img_to_base64(os.path.join(APP_DIR, 'bg3.jpg'))
 bg4_b64  = img_to_base64(os.path.join(APP_DIR, 'bg4.jpg'))
 
+# ============================================
+# DESIGN CSS
+# ============================================
 st.markdown(f"""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+* {{ font-family: 'Inter', sans-serif; }}
+
+/* Fond fixe slideshow sur toute la page */
 .slideshow {{
-    position: relative;
-    border-radius: 20px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
     overflow: hidden;
-    height: 300px;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(26,60,94,0.3);
 }}
 .slide {{
     position: absolute;
@@ -215,28 +110,33 @@ st.markdown(f"""
     30%  {{ opacity: 0; }}
     100% {{ opacity: 0; }}
 }}
-.hero-overlay {{
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+
+/* Overlay sombre sur toute la page */
+.stApp {{
+    background: rgba(10, 30, 50, 0.75);
+}}
+
+/* Hero section */
+.hero-section {{
     background: linear-gradient(
         135deg,
-        rgba(26,60,94,0.75) 0%,
-        rgba(41,128,185,0.65) 50%,
-        rgba(22,160,133,0.70) 100%
+        rgba(26,60,94,0.80) 0%,
+        rgba(41,128,185,0.70) 50%,
+        rgba(22,160,133,0.75) 100%
     );
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    border-radius: 20px;
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    backdrop-filter: blur(2px);
 }}
 .hero-title {{
     font-size: 3rem;
     font-weight: 800;
     color: white;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    letter-spacing: 2px;
     margin: 0.5rem 0;
 }}
 .hero-subtitle {{
@@ -254,60 +154,113 @@ st.markdown(f"""
     margin-top: 0.8rem;
     border: 1px solid rgba(255,255,255,0.3);
 }}
-</style>
 
+/* Cartes formulaire */
+.form-card {{
+    background: rgba(255,255,255,0.92);
+    border-radius: 18px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    margin-bottom: 1rem;
+    border-left: 5px solid #2980b9;
+    backdrop-filter: blur(5px);
+}}
+.form-card-title {{
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f4f8;
+}}
+
+/* Bouton analyser */
+.stButton>button {{
+    background: linear-gradient(135deg, #1a3c5e, #2980b9);
+    color: white !important;
+    border-radius: 15px;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    width: 100%;
+    border: none;
+    box-shadow: 0 5px 20px rgba(41,128,185,0.4);
+}}
+
+/* Carte résultat */
+.result-card {{
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    margin: 1rem 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+}}
+.result-title {{
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0.5rem 0;
+}}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {{
+    background: linear-gradient(
+        180deg,
+        rgba(26,60,94,0.95) 0%,
+        rgba(44,62,80,0.95) 100%
+    );
+    backdrop-filter: blur(10px);
+}}
+section[data-testid="stSidebar"] * {{
+    color: white !important;
+}}
+
+/* Texte général blanc sur fond sombre */
+.stMarkdown, .stMarkdown p, h1, h2, h3 {{
+    color: white !important;
+}}
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================
+# SLIDESHOW ARRIÈRE-PLAN
+# ============================================
+st.markdown("""
 <div class="slideshow">
     <div class="slide"></div>
     <div class="slide"></div>
     <div class="slide"></div>
     <div class="slide"></div>
-    <div class="hero-overlay">
-        <img src="data:image/png;base64,{logo_b64}"
-             style="width:80px; margin-bottom:0.5rem;
-                    border-radius:10px;">
-        <div class="hero-title">🏥 NutriScan AI</div>
-        <div class="hero-subtitle">
-            Prédiction intelligente du risque d'obésité par LightGBM
-        </div>
-        <div class="hero-badge">
-            🎓 Centrale Casablanca – Coding Week 2026
-        </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ============================================
+# HEADER PRINCIPAL
+# ============================================
+st.markdown(f"""
+<div class="hero-section">
+    <img src="data:image/png;base64,{logo_b64}"
+         style="width:100px; margin-bottom:0.5rem;">
+    <div class="hero-title">OBESITY RISK</div>
+    <div class="hero-subtitle">
+        Prédiction intelligente du risque d'obésité par LightGBM
+    </div>
+    <div class="hero-badge">
+        🎓 Centrale Casablanca – Coding Week 2026
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ============================================
-# STATISTIQUES RAPIDES
-# ============================================
-c1, c2, c3, c4, c5 = st.columns(5)
-stats = [
-    ("2111", "Patients",  "👥"),
-    ("17",   "Variables", "📊"),
-    ("7",    "Niveaux",   "🎯"),
-    ("1",    "Modèle ML", "🤖"),
-    ("97%+", "Précision", "✅"),
-]
-for col, (num, label, icon) in zip([c1,c2,c3,c4,c5], stats):
-    col.markdown(f"""
-    <div class="stat-card">
-        <div style="font-size:1.5rem">{icon}</div>
-        <div class="stat-number">{num}</div>
-        <div class="stat-label">{label}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# ============================================
 # SIDEBAR
 # ============================================
 with st.sidebar:
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center; padding:1rem 0;">
-        <img src="https://cdn-icons-png.flaticon.com/512/2977/2977339.png"
-             style="width:60px; margin-bottom:0.5rem;">
-        <div style="font-size:1.3rem; font-weight:700;">
-            NutriScan AI
+        <img src="data:image/png;base64,{logo_b64}"
+             style="width:70px; margin-bottom:0.5rem;">
+        <div style="font-size:1.2rem; font-weight:700;">
+            OBESITY RISK
         </div>
         <div style="font-size:0.8rem;
                     color:rgba(255,255,255,0.6);">
@@ -331,9 +284,9 @@ if page == "🏠 Accueil":
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.markdown("## 👋 Bienvenue sur NutriScan AI !")
+        st.markdown("## 👋 Bienvenue sur Obesity Risk !")
         st.markdown("""
-        **NutriScan AI** est un outil clinique intelligent
+        **Obesity Risk** est un outil clinique intelligent
         qui aide les médecins à estimer le
         **risque d'obésité** grâce au modèle **LightGBM**.
         """)
@@ -350,24 +303,17 @@ if page == "🏠 Accueil":
         ]
         for icon, titre, desc in etapes:
             st.markdown(f"""
-            <div style="background:#f8f9fa; border-radius:10px;
+            <div style="background:rgba(255,255,255,0.15);
+                        border-radius:10px;
                         padding:0.8rem 1rem; margin:0.3rem 0;
                         border-left:4px solid #2980b9;">
-                <b>{icon} {titre}</b><br>
-                <span style="color:#777; font-size:0.9rem;">
-                    {desc}
-                </span>
+                <b style="color:white">{icon} {titre}</b><br>
+                <span style="color:rgba(255,255,255,0.8);
+                             font-size:0.9rem;">{desc}</span>
             </div>
             """, unsafe_allow_html=True)
 
     with col2:
-        # Logo santé
-        st.markdown("""
-        <div style="text-align:center; padding:1rem;">
-            <img src="https://cdn-icons-png.flaticon.com/512/2977/2977339.png"
-                 style="width:120px;">
-        </div>
-        """, unsafe_allow_html=True)
         st.markdown("### 🎯 Les 7 niveaux")
         niveaux_info = [
             ("🔵", "Insufficient Weight"),
@@ -379,7 +325,13 @@ if page == "🏠 Accueil":
             ("🔴", "Obesity Type III"),
         ]
         for emoji, niveau in niveaux_info:
-            st.markdown(f"{emoji} {niveau}")
+            st.markdown(f"""
+            <div style="background:rgba(255,255,255,0.15);
+                        border-radius:8px; padding:0.5rem 1rem;
+                        margin:0.3rem 0; color:white;">
+                {emoji} {niveau}
+            </div>
+            """, unsafe_allow_html=True)
 
 # ============================================
 # PAGE : ANALYSE PATIENT
@@ -393,12 +345,14 @@ elif page == "👤 Analyse Patient":
         <div class="form-card">
         <div class="form-card-title">👤 Informations physiques</div>
         """, unsafe_allow_html=True)
-        # Champs de saisie au lieu de sliders
         genre  = st.selectbox("Genre", ["Male", "Female"])
-        age    = st.number_input("Âge", min_value=10, max_value=80, value=25)
-        taille = st.number_input("Taille (m)", min_value=1.40, max_value=2.10, value=1.70, step=0.01, format="%.2f")
-        poids  = st.number_input("Poids (kg)", min_value=30, max_value=200, value=70)
-
+        age    = st.number_input("Âge", min_value=10,
+                    max_value=80, value=25)
+        taille = st.number_input("Taille (m)",
+                    min_value=1.40, max_value=2.10,
+                    value=1.70, step=0.01, format="%.2f")
+        poids  = st.number_input("Poids (kg)",
+                    min_value=30, max_value=200, value=70)
         imc = poids / (taille ** 2)
         if imc < 18.5:
             st.info(f"📊 IMC : **{imc:.1f}** — Poids insuffisant")
@@ -417,8 +371,12 @@ elif page == "👤 Analyse Patient":
         antecedents = st.selectbox(
             "Antécédents familiaux d'obésité", ["yes", "no"])
         favc = st.selectbox("Fast-food fréquent", ["yes", "no"])
-        fcvc = st.number_input("Fréquence légumes (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1, format="%.1f")
-        ncp  = st.number_input("Repas par jour", min_value=1.0, max_value=4.0, value=3.0, step=0.5, format="%.1f")
+        fcvc = st.number_input("Fréquence légumes (1-3)",
+                    min_value=1.0, max_value=3.0,
+                    value=2.0, step=0.1, format="%.1f")
+        ncp  = st.number_input("Repas par jour",
+                    min_value=1.0, max_value=4.0,
+                    value=3.0, step=0.5, format="%.1f")
         caec = st.selectbox("Grignotage entre repas",
             ["no", "Sometimes", "Frequently", "Always"])
         st.markdown('</div>', unsafe_allow_html=True)
@@ -428,9 +386,15 @@ elif page == "👤 Analyse Patient":
         <div class="form-card">
         <div class="form-card-title">🏃 Activité & Mode de vie</div>
         """, unsafe_allow_html=True)
-        faf  = st.number_input("Sport (jours/semaine)", min_value=0.0, max_value=3.0, value=1.0, step=0.5, format="%.1f")
-        tue  = st.number_input("Temps écran (h/jour)", min_value=0.0, max_value=2.0, value=1.0, step=0.25, format="%.2f")
-        ch2o = st.number_input("Eau (litres/jour)", min_value=1.0, max_value=3.0, value=2.0, step=0.1, format="%.1f")
+        faf  = st.number_input("Sport (jours/semaine)",
+                    min_value=0.0, max_value=3.0,
+                    value=1.0, step=0.5, format="%.1f")
+        tue  = st.number_input("Temps écran (h/jour)",
+                    min_value=0.0, max_value=2.0,
+                    value=1.0, step=0.25, format="%.2f")
+        ch2o = st.number_input("Eau (litres/jour)",
+                    min_value=1.0, max_value=3.0,
+                    value=2.0, step=0.1, format="%.1f")
         mtrans = st.selectbox("Mode de transport", [
             "Public_Transportation", "Walking",
             "Automobile", "Motorbike", "Bike"])
@@ -443,7 +407,8 @@ elif page == "👤 Analyse Patient":
         smoke = st.selectbox("Fumeur", ["no", "yes"])
         calc  = st.selectbox("Consommation d'alcool",
             ["no", "Sometimes", "Frequently", "Always"])
-        scc   = st.selectbox("Surveille ses calories", ["no", "yes"])
+        scc   = st.selectbox("Surveille ses calories",
+            ["no", "yes"])
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -482,14 +447,12 @@ elif page == "👤 Analyse Patient":
             'Gender', 'family_history_with_overweight',
             'FAVC', 'CAEC', 'SMOKE', 'SCC', 'CALC', 'MTRANS'
         ]
-
         df_num    = df_patient[cols_numeriques].astype(float)
         df_num_sc = pd.DataFrame(
             scaler.transform(df_num),
             columns=cols_numeriques)
         df_cat = df_patient[cols_categorielles].astype(float)
         df_sc  = pd.concat([df_cat, df_num_sc], axis=1)
-
         colonnes_finales = [
             'Gender', 'Age', 'Height', 'Weight',
             'family_history_with_overweight',
@@ -511,19 +474,18 @@ elif page == "👤 Analyse Patient":
             5: ("🔴", "Obesity Type II",      "#c0392b"),
             6: ("🔴", "Obesity Type III",     "#922b21"),
         }
-
         emoji, label, couleur = niveaux[prediction]
 
         st.markdown("---")
         st.markdown("### 🎯 Résultat de l'analyse")
         st.markdown(f"""
         <div class="result-card"
-             style="background:{couleur}22;
+             style="background:{couleur}44;
                     border:3px solid {couleur};">
             <div style="font-size:3rem">{emoji}</div>
             <div class="result-title"
-                 style="color:{couleur};">{label}</div>
-            <div style="color:#555;">
+                 style="color:white;">{label}</div>
+            <div style="color:rgba(255,255,255,0.85);">
                 Confiance : {probas[prediction]*100:.1f}%
             </div>
         </div>
@@ -537,14 +499,19 @@ elif page == "👤 Analyse Patient":
 
         st.markdown("---")
         st.markdown("### 🔬 Explication SHAP")
-        st.markdown("*Quelles variables ont le plus influencé la prédiction ?*")
+        st.markdown(
+            "*Quelles variables ont le plus influencé "
+            "la prédiction ?*")
         try:
             explainer   = shap.TreeExplainer(modele)
             shap_values = explainer.shap_values(df_sc)
             fig, ax = plt.subplots(figsize=(10, 5))
             shap.summary_plot(shap_values, df_sc,
                               plot_type="bar", show=False)
-            plt.title("Impact des variables sur la prédiction")
+            plt.title("Impact des variables sur la prédiction",
+                      color='white')
+            fig.patch.set_alpha(0.0)
+            ax.set_facecolor('none')
             st.pyplot(fig)
             plt.close()
         except Exception as e:
@@ -569,11 +536,14 @@ elif page == "📊 Statistiques":
 
         st.markdown("### Distribution des niveaux d'obésité")
         fig, ax = plt.subplots(figsize=(10, 4))
+        fig.patch.set_alpha(0.0)
+        ax.set_facecolor('none')
         y.value_counts().plot(
             kind='bar', ax=ax, color='#2980b9')
-        ax.set_xlabel("Niveau d'obésité")
-        ax.set_ylabel("Nombre de patients")
-        plt.xticks(rotation=45)
+        ax.set_xlabel("Niveau d'obésité", color='white')
+        ax.set_ylabel("Nombre de patients", color='white')
+        ax.tick_params(colors='white')
+        plt.xticks(rotation=45, color='white')
         plt.tight_layout()
         st.pyplot(fig)
         plt.close()
@@ -591,7 +561,6 @@ elif page == "👥 Notre Équipe":
     col_img, col_noms = st.columns([2, 1])
 
     with col_img:
-        # Cherche la photo dans app/team.jpg
         team_path = os.path.join(APP_DIR, 'team.jpg')
         if os.path.exists(team_path):
             st.image(team_path,
@@ -611,12 +580,12 @@ elif page == "👥 Notre Équipe":
         ]
         for nom, color in membres:
             st.markdown(f"""
-            <div style="background:white; border-radius:10px;
+            <div style="background:rgba(255,255,255,0.15);
+                        border-radius:10px;
                         padding:0.8rem 1rem; margin:0.4rem 0;
-                        box-shadow:0 3px 10px rgba(0,0,0,0.08);
                         border-left:5px solid {color};">
                 <span style="font-weight:700;
-                             color:#1a3c5e;">👩‍💻 {nom}</span>
+                             color:white;">👩‍💻 {nom}</span>
             </div>
             """, unsafe_allow_html=True)
 
