@@ -345,5 +345,6 @@ pytest tests/
 ## IV. Critical Questions
 
 
+
 **Was the dataset balanced? If not, how was imbalance handled?**  
 Yes — all 7 classes are distributed between ~12% and ~15% per class. The dataset is effectively balanced. `stratify=y` was used in the train/test split to preserve this distribution. No SMOTE, undersampling, or class weighting was applied. F1-Macro was used as a secondary metric to ensure equal attention to all classes regardless of minor size variations. Impact: no class was systematically under-predicted.
