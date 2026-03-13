@@ -629,7 +629,7 @@ elif page == "📊 Statistiques":
 # ============================================
 elif page == "👥 Notre Équipe":
     st.markdown("## 👥 Notre Équipe")
-    st.markdown("### 🤝 Un projet réalisé en groupe !")
+    st.markdown("### 🤝 TEAM DATA HEALERS")
 
     col_img, col_noms = st.columns([2, 1])
 

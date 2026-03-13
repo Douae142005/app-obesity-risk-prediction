@@ -32,6 +32,39 @@ from data_processing import preprocess_pipeline
 print("="*60)
 print("🚀 DÉMARRAGE DE L'ENTRAÎNEMENT")
 print("="*60)
+# ============================================
+# CRÉATION DES MODÈLES 
+# ============================================
+
+def create_models(random_state=42):
+    """Crée les 3 modèles avec leurs hyperparamètres."""
+    
+    from sklearn.ensemble import RandomForestClassifier
+    from xgboost import XGBClassifier
+    from lightgbm import LGBMClassifier
+    
+    models = {
+        'Random Forest': RandomForestClassifier(
+            n_estimators=100,
+            random_state=random_state,
+            n_jobs=-1
+        ),
+        
+        'XGBoost': XGBClassifier(
+            n_estimators=100,
+            random_state=random_state,
+            eval_metric='mlogloss',
+            verbosity=0
+        ),
+        
+        'LightGBM': LGBMClassifier(
+            n_estimators=100,
+            random_state=random_state,
+            verbose=-1
+        )
+    }
+    
+    return models
 
 
 # ============================================
