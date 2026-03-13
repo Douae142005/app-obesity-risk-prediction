@@ -250,19 +250,18 @@ if page == "🏠 Accueil":
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.markdown("## 👋 Bienvenue sur ObesityAI !")
+        st.markdown("## 👋 Bienvenue sur NutriScan AI !")
         st.markdown("""
-        **ObesityAI** est un outil clinique intelligent
+        **NutriScan AI** est un outil clinique intelligent
         qui aide les médecins à estimer le
-        **risque d'obésité** grâce au Machine Learning.
+        **risque d'obésité** grâce au modèle **LightGBM**.
         """)
         st.markdown("### 🔄 Comment ça marche ?")
-        # Les 4 étapes du fonctionnement
         etapes = [
             ("1️⃣", "Saisir les données du patient",
              "Âge, poids, taille, habitudes..."),
-            ("2️⃣", "Analyse par IA",
-             "3 modèles ML analysent les données"),
+            ("2️⃣", "Analyse par LightGBM",
+             "Le modèle analyse les 16 variables"),
             ("3️⃣", "Résultat instantané",
              "Niveau d'obésité prédit avec confiance"),
             ("4️⃣", "Explication SHAP",
@@ -282,7 +281,6 @@ if page == "🏠 Accueil":
 
     with col2:
         st.markdown("### 🎯 Les 7 niveaux")
-        # Affichage des 7 classes d'obésité
         niveaux_info = [
             ("🔵", "Insufficient Weight"),
             ("🟢", "Normal Weight"),
@@ -552,15 +550,16 @@ elif page == "📊 Statistiques":
 # ============================================
 elif page == "👥 Notre Équipe":
     st.markdown("## 👥 Notre Équipe")
+    st.markdown("### 🤝 Un projet réalisé en groupe !")
     membres = [
-        ("👩‍💻", "Meryem",   "Data Processing", "#3498db"),
-        ("👩‍💻", "Amina",    "Analyse EDA",      "#2ecc71"),
-        ("👩‍💻", "Douaa",    "Modèles ML",       "#e74c3c"),
-        ("👩‍💻", "Hajar AZ", "SHAP & Évaluation","#f39c12"),
-        ("👩‍💻", "Hajar D",  "Interface",        "#9b59b6"),
+        ("👩‍💻", "Meryem Querchi",   "#3498db"),
+        ("👩‍💻", "Amina Boutalmaouin",    "#2ecc71"),
+        ("👩‍💻", "Douae Amghar",    "#e74c3c"),
+        ("👩‍💻", "Hajar Azoud", "#f39c12"),
+        ("👩‍💻", "Hajar Dyaz",  "#9b59b6"),
     ]
     cols = st.columns(5)
-    for col, (icon, nom, role, color) in zip(cols, membres):
+    for col, (icon, nom, color) in zip(cols, membres):
         col.markdown(f"""
         <div style="background:white; border-radius:15px;
                     padding:1.5rem; text-align:center;
@@ -569,8 +568,6 @@ elif page == "👥 Notre Équipe":
             <div style="font-size:2.5rem">{icon}</div>
             <div style="font-weight:700;
                         color:#1a3c5e;">{nom}</div>
-            <div style="color:{color};
-                        font-size:0.85rem;">{role}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -600,10 +597,6 @@ elif page == "ℹ️ À propos":
         ### 🛠️ Technologies
         - **Python** — Langage principal
         - **Streamlit** — Interface web
-        - **XGBoost / LightGBM / RF** — Modèles ML
+        - **LightGBM** — Modèle ML (97%+ précision)
         - **SHAP** — Explicabilité
-        - **GitHub Actions** — CI/CD
-
-        ### 📅 Deadline
-        **Dimanche 15 Mars 2026 à 12h00**
-        """)
+        - **GitHub Actions** — CI/CD ### """)
