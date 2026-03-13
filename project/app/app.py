@@ -113,7 +113,7 @@ st.markdown(f"""
 
 /* Overlay sombre sur toute la page */
 .stApp {{
-    background: rgba(10, 30, 50, 0.75);
+    background: rgba(10, 30, 50, 0.3);
 }}
 
 /* Hero section */
