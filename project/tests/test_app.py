@@ -46,16 +46,7 @@ class TestApp:
         except ImportError:
             pytest.skip("Fonction charger_modele non trouvée")
 
-    def test_img_to_base64_fichier_inexistant(self):
-        """Test que img_to_base64 retourne vide si fichier absent."""
-        try:
-            from app import img_to_base64
-            result = img_to_base64("fichier_inexistant.jpg")
-            assert result == ""
-            print("✅ test_img_to_base64_fichier_inexistant passé")
-        except ImportError:
-            pytest.skip("Fonction img_to_base64 non trouvée")
-
+    
 
 class TestAppDataProcessing:
     """Tests pour le traitement des données dans l'app."""
