@@ -76,7 +76,7 @@ app-obesity-risk-prediction/
 ### II.1 — `app/app.py` — Streamlit Interface
 
 The web interface built with Streamlit allows physicians to interact with the model without any technical knowledge.
-
+![App Screenshot](docs/screenshot.png)
 
 **Key points:**
 - Input form covering all 16 patient features (age, weight, height, diet, activity, etc.)
