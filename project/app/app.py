@@ -69,7 +69,6 @@ st.markdown(f"""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 * {{ font-family: 'Inter', sans-serif; }}
 
-/* Fond fixe slideshow sur toute la page */
 .slideshow {{
     position: fixed;
     top: 0; left: 0;
@@ -111,7 +110,6 @@ st.markdown(f"""
     100% {{ opacity: 0; }}
 }}
 
-/* Overlay sombre sur toute la page */
 .stApp {{
     background: rgba(10, 30, 50, 0.3);
 }}
@@ -129,7 +127,6 @@ st.markdown(f"""
     text-align: center;
     margin-bottom: 2rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    backdrop-filter: blur(2px);
 }}
 .hero-title {{
     font-size: 3rem;
@@ -155,23 +152,37 @@ st.markdown(f"""
     border: 1px solid rgba(255,255,255,0.3);
 }}
 
-/* Cartes formulaire */
+/* ✅ Cartes formulaire BLANC OPAQUE */
 .form-card {{
-    background: rgba(255,255,255,0.92);
+    background: rgba(255,255,255,0.97) !important;
     border-radius: 18px;
     padding: 1.8rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     margin-bottom: 1rem;
     border-left: 5px solid #2980b9;
-    backdrop-filter: blur(5px);
 }}
 .form-card-title {{
     font-size: 1.1rem;
     font-weight: 700;
-    color: #1a3c5e;
+    color: #1a3c5e !important;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #f0f4f8;
+}}
+
+/* ✅ Forcer les labels des inputs en noir */
+.form-card label,
+.form-card .stSelectbox label,
+.form-card .stNumberInput label {{
+    color: #1a3c5e !important;
+    font-weight: 600 !important;
+}}
+
+/* ✅ Fond blanc pour les inputs */
+.stSelectbox > div > div,
+.stNumberInput > div > div > input {{
+    background: white !important;
+    color: #1a3c5e !important;
 }}
 
 /* Bouton analyser */
@@ -194,7 +205,6 @@ st.markdown(f"""
     text-align: center;
     margin: 1rem 0;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    backdrop-filter: blur(5px);
 }}
 .result-title {{
     font-size: 1.8rem;
@@ -206,18 +216,30 @@ st.markdown(f"""
 section[data-testid="stSidebar"] {{
     background: linear-gradient(
         180deg,
-        rgba(26,60,94,0.95) 0%,
-        rgba(44,62,80,0.95) 100%
+        rgba(26,60,94,0.97) 0%,
+        rgba(44,62,80,0.97) 100%
     );
-    backdrop-filter: blur(10px);
 }}
 section[data-testid="stSidebar"] * {{
     color: white !important;
 }}
 
-/* Texte général blanc sur fond sombre */
-.stMarkdown, .stMarkdown p, h1, h2, h3 {{
+/* Texte blanc sur les autres pages */
+.stMarkdown p, h1, h2, h3 {{
     color: white !important;
+}}
+
+/* ✅ À propos : fond blanc lisible */
+.apropos-card {{
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    color: #1a3c5e !important;
+}}
+.apropos-card h3, .apropos-card p,
+.apropos-card li {{
+    color: #1a3c5e !important;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -343,11 +365,13 @@ elif page == "👤 Analyse Patient":
     with col1:
         st.markdown("""
         <div class="form-card">
-        <div class="form-card-title">👤 Informations physiques</div>
+        <div class="form-card-title">
+            👤 Informations physiques
+        </div>
         """, unsafe_allow_html=True)
         genre  = st.selectbox("Genre", ["Male", "Female"])
-        age    = st.number_input("Âge", min_value=10,
-                    max_value=80, value=25)
+        age    = st.number_input("Âge",
+                    min_value=10, max_value=80, value=25)
         taille = st.number_input("Taille (m)",
                     min_value=1.40, max_value=2.10,
                     value=1.70, step=0.01, format="%.2f")
@@ -366,7 +390,9 @@ elif page == "👤 Analyse Patient":
 
         st.markdown("""
         <div class="form-card">
-        <div class="form-card-title">🍔 Habitudes alimentaires</div>
+        <div class="form-card-title">
+            🍔 Habitudes alimentaires
+        </div>
         """, unsafe_allow_html=True)
         antecedents = st.selectbox(
             "Antécédents familiaux d'obésité", ["yes", "no"])
@@ -384,7 +410,9 @@ elif page == "👤 Analyse Patient":
     with col2:
         st.markdown("""
         <div class="form-card">
-        <div class="form-card-title">🏃 Activité & Mode de vie</div>
+        <div class="form-card-title">
+            🏃 Activité & Mode de vie
+        </div>
         """, unsafe_allow_html=True)
         faf  = st.number_input("Sport (jours/semaine)",
                     min_value=0.0, max_value=3.0,
@@ -518,34 +546,27 @@ elif page == "👤 Analyse Patient":
             st.warning(f"⚠️ SHAP non disponible : {e}")
 
 # ============================================
-# PAGE : STATISTIQUES AMÉLIORÉE
+# PAGE : STATISTIQUES
 # ============================================
 elif page == "📊 Statistiques":
-    st.markdown("## 📊 Statistiques du Dataset Obesity Risk")
-
+    st.markdown("## 📊 Statistiques du Dataset")
     try:
         from ucimlrepo import fetch_ucirepo
-        dataset = fetch_ucirepo(id=544)  # dataset UCI
+        dataset = fetch_ucirepo(id=544)
         X = dataset.data.features
         y = dataset.data.targets
         df = pd.concat([X, y], axis=1)
 
-        # -------------------------------
-        # 1️⃣ Informations générales
-        # -------------------------------
         col1, col2, col3 = st.columns(3)
         col1.metric("👥 Patients", df.shape[0])
         col2.metric("📊 Variables", df.shape[1])
         col3.metric("🎯 Classes", y.nunique())
 
         st.markdown("---")
-
-        # -------------------------------
-        # 2️⃣ Distribution des niveaux d'obésité
-        # -------------------------------
         st.markdown("### Distribution des niveaux d'obésité")
-        fig, ax = plt.subplots(figsize=(10,4))
-        y.value_counts().plot(kind="bar", ax=ax, color="#2980b9")
+        fig, ax = plt.subplots(figsize=(10, 4))
+        y.value_counts().plot(
+            kind='bar', ax=ax, color='#2980b9')
         ax.set_xlabel("Niveau d'obésité", color='white')
         ax.set_ylabel("Nombre de patients", color='white')
         ax.tick_params(colors='white')
@@ -557,67 +578,33 @@ elif page == "📊 Statistiques":
         plt.close()
 
         st.markdown("---")
-
-        # -------------------------------
-        # 3️⃣ Statistiques des variables physiques
-        # -------------------------------
         st.markdown("### Statistiques des variables physiques")
         phys_vars = ['Age', 'Height', 'Weight']
         st.dataframe(df[phys_vars].describe().T)
 
         st.markdown("---")
-
-        # -------------------------------
-        # 4️⃣ Corrélation des variables importantes
-        # -------------------------------
-        st.markdown("### Corrélation entre variables importantes")
-        corr_vars = ['Age','Height','Weight','FCVC','FAF','TUE']
-        corr = df[corr_vars].corr()
-
-        fig, ax = plt.subplots(figsize=(6,4))
-        im = ax.imshow(corr, cmap="Blues")
-
-        ax.set_xticks(range(len(corr.columns)))
-        ax.set_yticks(range(len(corr.columns)))
-        ax.set_xticklabels(corr.columns, rotation=45)
-        ax.set_yticklabels(corr.columns)
-
-        # Affichage des valeurs de corrélation sur la heatmap
-        for i in range(len(corr.columns)):
-            for j in range(len(corr.columns)):
-                ax.text(j, i, f"{corr.iloc[i,j]:.2f}",
-                        ha="center", va="center", color="black", fontsize=9)
-
-        fig.patch.set_alpha(0.0)
-        ax.set_facecolor('none')
-        st.pyplot(fig)
-        plt.close()
-
-        st.markdown("---")
-
-        # -------------------------------
-        # 5️⃣ Histogrammes des variables clés
-        # -------------------------------
         st.markdown("### Distribution de l'âge et du poids")
         col1, col2 = st.columns(2)
-
         with col1:
             fig, ax = plt.subplots()
             df['Age'].hist(ax=ax, bins=10, color="#2ecc71")
-            ax.set_xlabel("Âge")
-            ax.set_ylabel("Nombre de patients")
-            ax.set_title("Distribution de l'âge")
+            ax.set_xlabel("Âge", color='white')
+            ax.set_ylabel("Nombre de patients", color='white')
+            ax.set_title("Distribution de l'âge", color='white')
+            ax.tick_params(colors='white')
             fig.patch.set_alpha(0.0)
+            ax.set_facecolor('none')
             st.pyplot(fig)
             plt.close()
-
         with col2:
             fig, ax = plt.subplots()
             df['Weight'].hist(ax=ax, bins=10, color="#e74c3c")
-            ax.set_xlabel("Poids (kg)")
-            ax.set_ylabel("Nombre de patients")
-            ax.set_title("Distribution du poids")
+            ax.set_xlabel("Poids (kg)", color='white')
+            ax.set_ylabel("Nombre de patients", color='white')
+            ax.set_title("Distribution du poids", color='white')
+            ax.tick_params(colors='white')
             fig.patch.set_alpha(0.0)
+            ax.set_facecolor('none')
             st.pyplot(fig)
             plt.close()
 
@@ -637,18 +624,19 @@ elif page == "👥 Notre Équipe":
         team_path = os.path.join(APP_DIR, 'team.jpg')
         if os.path.exists(team_path):
             st.image(team_path,
-                     caption="Notre équipe – Coding Week 2026")
+                     caption="Notre équipe – Coding Week 2026",
+                     use_column_width=True)
         else:
             st.info("📸 Ajoutez votre photo dans app/team.jpg")
 
     with col_noms:
         st.markdown("### 👩‍💻 Les membres")
         membres = [
-            ("Meryem Querchi",   "#3498db"),
-            ("Amina Boutalmaouine ",    "#2ecc71"),
-            ("Douae Amghar",    "#e74c3c"),
-            ("Hajar Azoud", "#f39c12"),
-            ("Hajar Dyaz",  "#9b59b6"),
+            ("Meryem Querchi",        "#3498db"),
+            ("Amina Boutalmaouine",   "#2ecc71"),
+            ("Douae Amghar",          "#e74c3c"),
+            ("Hajar Azoud",           "#f39c12"),
+            ("Hajar Dyaz",            "#9b59b6"),
         ]
         for nom, color in membres:
             st.markdown(f"""
@@ -670,24 +658,39 @@ elif page == "ℹ️ À propos":
 
     with col1:
         st.markdown("""
-        ### 🎯 Objectif
-        Développer un outil clinique basé sur le ML
-        pour estimer le risque d'obésité.
-
-        ### 📁 Dataset UCI
-        - **Source** : UCI Machine Learning Repository
-        - **ID** : 544
-        - **Patients** : 2111
-        - **Variables** : 17
-        - **Classes** : 7
-        """)
+        <div class="apropos-card">
+            <h3>🎯 Objectif</h3>
+            <p>Développer un outil clinique basé sur le ML
+            pour estimer le risque d'obésité.</p>
+            <h3>📁 Dataset UCI</h3>
+            <ul>
+                <li><b>Source</b> : UCI Machine Learning Repository</li>
+                <li><b>ID</b> : 544</li>
+                <li><b>Patients</b> : 2111</li>
+                <li><b>Variables</b> : 17</li>
+                <li><b>Classes</b> : 7</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        ### 🛠️ Technologies
-        - **Python** — Langage principal
-        - **Streamlit** — Interface web
-        - **LightGBM** — Modèle ML (97%+ précision)
-        - **SHAP** — Explicabilité
-        - **GitHub Actions** — CI/CD
-        """)
+        <div class="apropos-card">
+            <h3>🛠️ Technologies</h3>
+            <ul>
+                <li><b>Python</b> — Langage principal</li>
+                <li><b>Streamlit</b> — Interface web</li>
+                <li><b>LightGBM</b> — Modèle ML (97%+ précision)</li>
+                <li><b>SHAP</b> — Explicabilité</li>
+                <li><b>GitHub Actions</b> — CI/CD</li>
+            </ul>
+            <h3>📊 Variables utilisées</h3>
+            <ul>
+                <li>Genre, Âge, Taille, Poids</li>
+                <li>Habitudes alimentaires</li>
+                <li>Activité physique</li>
+                <li>Mode de transport</li>
+                <li>Consommation d'eau et d'alcool</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
