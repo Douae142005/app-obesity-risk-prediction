@@ -1,0 +1,28 @@
+# Dataset
+ucimlrepo
+
+# Data manipulation
+pandas
+numpy
+
+# Machine Learning
+scikit-learn
+xgboost
+lightgbm
+catboost
+
+# Explainability
+shap
+
+# Visualization
+matplotlib
+seaborn
+
+# Model saving
+joblib
+
+# Web interface
+streamlit
+
+# Testing
+pytest
