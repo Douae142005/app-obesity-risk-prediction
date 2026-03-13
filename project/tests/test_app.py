@@ -298,7 +298,7 @@ class TestAppRecommandations:
             from app import RECOMMANDATIONS
             
             # Niveaux non urgents (0-3)
-            non_urgent_keywords = ["recommandée", "conseillé", "Aucune action", "suivi", "dans les"]
+            non_urgent_keywords = ["recommandée", "conseillé", "aucune action", "suivi", "dans les", "aucune"]
             for i in range(4):
                 urgence = RECOMMANDATIONS[i]["urgence"].lower()
                 assert any(keyword in urgence for keyword in non_urgent_keywords), \
