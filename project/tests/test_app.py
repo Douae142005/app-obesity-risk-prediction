@@ -262,12 +262,42 @@ class TestAppIntegration:
             path = os.path.join(project_root, dossier)
             assert os.path.exists(path), f"❌ Dossier {dossier} manquant"
         
-     print("✅ test_structure_fichiers passé")
+        print("✅ test_structure_fichiers passé")
 
 
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("📱 TESTS DE L'APPLICATION")
+    print("="*60)
+    
+    test = TestApp()
+    test.test_app_imports()
+    test.test_charger_modele_exists()
+    test.test_img_to_base64_exists()
+    test.test_img_to_base64_fichier_inexistant()
+    
+    test_data = TestAppDataProcessing()
+    test_data.test_donnees_patient_structure()
+    test_data.test_colonnes_numeriques()
+    test_data.test_colonnes_categorielles()
+    
+    test_pred = TestAppPredictions()
+    test_pred.test_niveaux_obesite()
+    test_pred.test_calcul_imc()
+    test_pred.test_interpretation_imc()
+    
+    test_pages = TestAppPages()
+    test_pages.test_pages_exist()
+    test_pages.test_membres_equipe()
+    test_pages.test_couleurs_membres()
+    
+    test_int = TestAppIntegration()
+    test_int.test_fichiers_essentiels_existent()
+    test_int.test_images_optionnelles()
+    test_int.test_structure_fichiers()
+    
+    print("\n" + "="*60)
+    print("✅ TOUS LES TESTS APPLICATION TERMINÉS")
     print("="*60)
     
    
