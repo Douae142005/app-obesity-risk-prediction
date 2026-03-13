@@ -5,6 +5,7 @@ Tests unitaires pour l'application Streamlit.
 Vérifie le chargement, les prédictions et l'affichage.
 """
 
+
 import os
 import sys
 import pytest
