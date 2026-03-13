@@ -32,6 +32,7 @@ from data_processing import preprocess_pipeline
 print("="*60)
 print("🚀 DÉMARRAGE DE L'ENTRAÎNEMENT")
 print("="*60)
+
 # ============================================
 # CRÉATION DES MODÈLES 
 # ============================================
