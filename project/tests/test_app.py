@@ -297,8 +297,9 @@ if __name__ == "__main__":
     test_int.test_images_optionnelles()
     test_int.test_structure_fichiers()
     
+    
     print("\n" + "="*60)
     print("✅ TOUS LES TESTS APPLICATION TERMINÉS")
     print("="*60)
-    
+
    
