@@ -9,6 +9,7 @@ Génère :
 - Interprétation automatique des résultats
 
 Prérequis : avoir exécuté train_model.py → models/best_model.pkl
+
 """
 
 import os
