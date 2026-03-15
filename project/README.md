@@ -257,3 +257,87 @@ pytest
 git clone https://github.com/Douae142005/app-obesity-risk-prediction.git
 cd app-obesity-risk-prediction/project
 ```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Train the model
+
+Downloads the dataset from UCI, runs the full preprocessing pipeline, trains 3 models, selects the best, and saves all artifacts to `models/`.
+
+```bash
+python src/train_model.py
+```
+
+### 4. (Optional) Run full evaluation
+
+Generates confusion matrix and ROC curves in `outputs/`.
+
+```bash
+python src/evaluate_model.py
+```
+
+### 5. Launch the Streamlit application
+
+```bash
+streamlit run app/app.py
+```
+
+Open your browser at `http://localhost:8501`.
+
+### 6. (Optional) Run with Docker
+
+```bash
+docker build -t obesity-risk-app .
+docker run -p 8501:8501 obesity-risk-app
+```
+
+### 7. Run automated tests
+
+```bash
+pytest tests/ -v
+```
+
+---
+
+## IV. Critical Questions
+
+**Was the dataset balanced? If not, how was imbalance handled?**  
+Yes — all 7 classes are distributed between ~12% and ~15% per class. The dataset is effectively balanced. `stratify=y` was used in the train/test split to preserve this distribution. No SMOTE, undersampling, or class weighting was applied. F1-Macro was used as a secondary metric to ensure equal attention to all classes regardless of minor size variations. Impact: no class was systematically under-predicted.
+
+---
+
+**Which ML model performed best? Performance metrics?**  
+**LightGBM** achieved the best results across all metrics:
+
+| Metric | Score |
+|---|---|
+| Accuracy | ~0.96 |
+| F1-Weighted | ~0.96 |
+| F1-Macro | ~0.95 |
+| ROC-AUC (macro OvR) | > 0.99 |
+
+LightGBM was selected for its speed advantage over XGBoost on this dataset size, its native SHAP compatibility via `TreeExplainer`, and its consistent superiority across all evaluation runs.
+
+---
+
+**Which medical features most influenced predictions (SHAP results)?**  
+Based on SHAP summary plots, the top drivers are:
+
+1. **Weight** — strongest single predictor across all obesity classes
+2. **Height** — interacts with weight (implicit BMI relationship)
+3. **FAF** (Physical Activity Frequency) — low activity strongly pushes toward higher obesity classes
+4. **FCVC** (Vegetable Consumption Frequency) — lower consumption linked to higher risk
+5. **Age** — moderate influence, especially for `Obesity_Type_III`
+6. **NCP** (Number of main meals per day) — eating pattern signal
+7. **CH2O** (Daily water intake) — hydration correlates with healthier weight profiles
+
+These findings are clinically coherent and reinforce physician trust in the model's predictions.
+
+---
+
+**What insights did prompt engineering provide?**  
+Full documentation is in [`docs/prompt_engineering.md`](docs/prompt_engineering.md). Summary:
