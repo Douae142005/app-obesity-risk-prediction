@@ -133,7 +133,7 @@ class TestAppAuth:
         # Simulation des variables de session
         session_vars = [
             'connecte', 'medecin_nom', 'medecin_email',
-            'historique', 'page', 'medecins_db'
+            'historique', 'page'
         ]
         
         # Vérification que les variables sont définies dans le code
