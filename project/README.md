@@ -96,7 +96,81 @@ app-obesity-risk-prediction/
 ```
 
 ---
- 
+
+### II.1 — `app/app.py` — Streamlit Interface
+
+The web interface built with Streamlit allows physicians to interact with the model without any technical knowledge.
+
+![App Screenshot](docs/screenshot.png)
+*Obesity Risk AI — Medical AI Platform interface*
+
+**Key points:**
+- Input form covering all 16 patient features (age, weight, height, diet, activity, etc.)
+- Loads `best_model.pkl`, `label_encoders.pkl`, and `scaler.pkl` from `models/` at startup
+- Displays the predicted obesity class with its confidence score via `predict_proba`
+- Renders a SHAP force plot for each individual prediction
+- Color-coded risk indicator for quick clinical reading
+
+---
+
+### II.2 — `data/` — Processed Data
+
+Contains the preprocessed datasets produced by `save_processed_data()` in `data_processing.py`.
+
+| File | Description |
+|---|---|
+| `train_processed.csv` | Encoded and normalized training set (80%) |
+| `test_processed.csv` | Encoded and normalized test set (20%) |
+
+These files allow offline reuse without re-fetching the UCI dataset on subsequent runs. They are regenerated automatically if `train_model.py` is re-executed.
+
+---
+
+### II.3 — `docs/prompt_engineering.md` — Prompt Engineering Documentation
+
+Dedicated markdown file documenting the AI-assisted development workflow across the full project.
+
+**AI tools used:**
+
+| AI Tool | Type | Primary Usage |
+|---|---|---|
+| **Claude (Anthropic)** | Conversational assistant | Data processing, code explanation |
+| **GitHub Copilot** | IDE completion | EDA, Streamlit interface |
+| **ChatGPT (GPT-4)** | Conversational assistant | ML models, tests, CI/CD |
+| **DeepSeek Coder** | Code assistant | Optimization, debugging |
+| **OpenAI Codex** | Code generation | Automation, scripts |
+
+**Contains:**
+- Exact prompts used per tool and per task, with corresponding outputs
+- What was kept as-is vs. manually adjusted after generation
+- Analysis of each tool's effectiveness for its assigned task
+- Lessons learned and suggested prompt improvements for future iterations
+
+---
+
+### II.4 — `models/` — Saved Artifacts
+
+Auto-generated folder, populated after running `train_model.py`.
+
+| File | Description |
+|---|---|
+| `best_model.pkl` | Serialized LightGBM model — best across the 3 trained candidates |
+| `label_encoders.pkl` | `LabelEncoder` objects for all categorical columns |
+| `scaler.pkl` | `StandardScaler` fitted on `X_train` only (prevents data leakage) |
+| `confusion_matrix_lightgbm.png` | Per-model confusion matrix — LightGBM |
+| `confusion_matrix_random_forest.png` | Per-model confusion matrix — Random Forest |
+| `confusion_matrix_xgboost.png` | Per-model confusion matrix — XGBoost |
+
+**Critical design note:** the scaler is fitted exclusively on `X_train` inside `normalize_features()`. Only `.transform()` is applied to `X_test` — this prevents any test-set information from leaking into the training process.
+
+---
+
+### II.5 — `notebooks/eda.ipynb` — Exploratory Data Analysis
+
+Full pre-training analysis documenting all key decisions taken before modeling.
+
+**Missing values** — `df.isnull().sum().sum() == 0`. No missing values found. `handle_missing_values()` is kept as a production safeguard (numeric → median, categorical → mode).
+
 **Memory profiling** — `df.info()` revealed all numerical columns as `float64`/`int64`, totaling ~280.5 KB. Decision: apply `optimize_memory()` early in the pipeline to halve memory usage before any further processing.
 
 **Class distribution** — All 7 obesity classes fall between 12% and 15%. Dataset is balanced. Decision: use `stratify=y` in the split — no SMOTE or class weighting needed.
@@ -169,6 +243,7 @@ The project brief recommended 4 models: Random Forest, XGBoost, LightGBM, and Ca
 - Faster training than XGBoost on this dataset size
 - Native SHAP compatibility via `TreeExplainer`
 - Less prone to overfitting with default parameters
+
 **Key design points:**
 - Each model evaluated with `accuracy_score` and `f1_score(average='weighted')` on `X_test`
 - `select_best_model()` picks the model with the highest accuracy
