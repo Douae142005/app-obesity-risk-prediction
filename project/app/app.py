@@ -11,7 +11,7 @@ import shap
 import base64
 import matplotlib.pyplot as plt
 from datetime import datetime
-
+import json
 # ============================================
 # CONFIGURATION DE LA PAGE
 # ============================================
@@ -60,10 +60,22 @@ bg4_b64  = img_to_base64(os.path.join(APP_DIR, 'bg4.jpg'))
 # ============================================
 # COMPTES MÉDECINS (stockés en session)
 # ============================================
-if 'medecins_db' not in st.session_state:
-    st.session_state.medecins_db = {}
 
-MEDECINS = st.session_state.medecins_db
+
+# Fichier de stockage des comptes
+USERS_FILE = os.path.join(APP_DIR, 'users.json')
+
+def load_users():
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'r') as f:
+            return json.load(f)
+    return {}
+
+def save_users(users):
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f)
+
+MEDECINS = load_users()
 
 # ============================================
 # SESSION STATE
@@ -392,6 +404,7 @@ if page == "🔐 Connexion":
                     st.error("❌ Le mot de passe doit contenir au moins 6 caractères")
                 else:
                     MEDECINS[new_email] = {"password": new_pass, "nom": new_nom}
+                    save_users(MEDECINS)
                     st.success(f"✅ Compte créé pour **{new_nom}** ! Connectez-vous dans l'onglet Connexion.")
             st.markdown("""
             <p style="color:#888;font-size:0.82rem;text-align:center;margin-top:10px;">
