@@ -341,3 +341,20 @@ These findings are clinically coherent and reinforce physician trust in the mode
 
 **What insights did prompt engineering provide?**  
 Full documentation is in [`docs/prompt_engineering.md`](docs/prompt_engineering.md). Summary:
+
+5 AI tools were used across the project, each assigned to the tasks that best matched their strengths:
+
+| AI Tool | Task | Key insight |
+|---|---|---|
+| **Claude** | Data processing, code explanation | Best for understanding and documenting complex pipeline logic |
+| **GitHub Copilot** | EDA, Streamlit interface | Fastest for in-editor boilerplate and repetitive UI patterns |
+| **ChatGPT (GPT-4)** | ML models, tests, CI/CD | Reliable for structured multi-step tasks like GitHub Actions config |
+| **DeepSeek Coder** | Optimization, debugging | Effective for targeted code fixes with minimal context |
+| **OpenAI Codex** | Automation, scripts | Efficient for generating standalone utility scripts |
+
+Key lesson: **specificity in prompts directly reduces iteration cycles** — providing function names, expected input/output types, and desired output format in the initial prompt consistently produced working code in one shot. Vague prompts required 2–3 follow-up exchanges to reach the same result.
+
+---
+
+*École Centrale Casablanca · Coding Week March 2026 · Supervised by K. Zerhouni & Team*  
+*Team Data Healers: Amghar Douae · Azoud Hajar · Boutalmaouine Amina · Dyaz Hajar · Querchi Meryem*
