@@ -1,5 +1,7 @@
 ---
 ## 🚀 Quick Start
+prérequis : python 3.11+
+
 
 ### 1. Cloner le repo
 ```bash
