@@ -29,4 +29,4 @@ streamlit run app/app.py
 pytest tests/ -v
 ```
 
-For detailed project documentation, please refer to the README located inside the `project` folder: [project/README.md](project/README.md)
+
