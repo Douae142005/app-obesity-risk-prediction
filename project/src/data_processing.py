@@ -15,7 +15,6 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler # Encodage + Norm
 from sklearn.model_selection import train_test_split # Split 80/20
 
 
-
 # ============================================
 # 1. CHARGEMENT DES DONNÉES
 # ============================================
