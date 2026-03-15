@@ -32,3 +32,4 @@ pytest tests/ -v
 ```
 
 For detailed project documentation, please refer to the README located inside the `project` folder: [project/README.md](project/README.md)
+Voici le lienpour accéder au planning du projet dans le compte JIRA  : https://centrale-casablanca-team-codingweek.atlassian.net/?continue=https%3A%2F%2Fcentrale-casablanca-team-codingweek.atlassian.net%2Fwelcome%2Fsoftware%3FprojectId%3D10000&atlOrigin=eyJpIjoiMDkyYjNhYzc3YzhiNGQzODk2NjJmYTlhMWEyMGIxM2MiLCJwIjoiamlyYS1zb2Z0d2FyZSJ9
