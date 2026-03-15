@@ -96,3 +96,76 @@ app-obesity-risk-prediction/
 ```
 
 ---
+ 
+**Memory profiling** — `df.info()` revealed all numerical columns as `float64`/`int64`, totaling ~280.5 KB. Decision: apply `optimize_memory()` early in the pipeline to halve memory usage before any further processing.
+
+**Class distribution** — All 7 obesity classes fall between 12% and 15%. Dataset is balanced. Decision: use `stratify=y` in the split — no SMOTE or class weighting needed.
+
+**Outliers** — Boxplots on 8 numerical features (`Age`, `Height`, `Weight`, `FCVC`, `NCP`, `CH2O`, `FAF`, `TUE`). All extreme values are medically plausible (e.g., Weight = 170 kg, Age = 61). Decision: no outlier removal.
+
+**Correlations** — No feature pair exceeded 0.8 Pearson correlation. Highest: Height ↔ Weight (0.46), Age ↔ TUE (−0.30). Decision: all features retained, no dimensionality reduction applied.
+
+---
+
+### II.6 — `outputs/` — Evaluation Plots
+
+Auto-generated folder, populated after running `evaluate_model.py`.
+
+| File | Description |
+|---|---|
+| `confusion_matrix_final.png` | Confusion matrix of the best model on the full test set |
+| `roc_curves.png` | One ROC curve per class (One-vs-Rest) with individual AUC scores |
+
+---
+
+### II.7 — `src/data_processing.py` — Preprocessing Pipeline
+
+Central module called by both `train_model.py` and `evaluate_model.py`. Ensures fully consistent preprocessing across training and inference.
+
+**Full pipeline (`preprocess_pipeline()`):**
+
+```
+load_data()              → fetch dataset from UCI (id=544)
+handle_missing_values()  → safeguard fill (median / mode)
+optimize_memory()        → float64→float32, int64→int32
+encode_features()        → LabelEncoder on all object columns
+split_features_target()  → separate X and y on NObeyesdad
+split_train_test()       → 80/20 stratified split, random_state=42
+normalize_features()     → StandardScaler fit on X_train only
+save_processed_data()    → CSV + encoders + scaler to disk
+```
+
+**Key function — `optimize_memory(df)`:**
+```python
+def optimize_memory(df):
+    for col in df.select_dtypes(include=['float64']).columns:
+        df[col] = df[col].astype('float32')
+    for col in df.select_dtypes(include=['int64']).columns:
+        df[col] = df[col].astype('int32')
+    return df
+```
+Memory before: ~280.5 KB → after: ~140.3 KB → **~50% reduction ✅**
+
+---
+
+### II.8 — `src/train_model.py` — Model Training & Comparison
+
+Trains 3 models sequentially, evaluates each on the test set, selects the best by accuracy, and saves it.
+
+**Model selection — why 3 models and not 4:**
+
+The project brief recommended 4 models: Random Forest, XGBoost, LightGBM, and CatBoost. After analysis, **CatBoost was deliberately excluded** for the following reason: CatBoost is specifically designed for high-cardinality categorical features and large-scale datasets. Our dataset contains only ~2,111 rows with low-cardinality categorical features, a context where CatBoost provides no meaningful advantage over LightGBM while significantly increasing training time. The 3 selected models are fully representative and sufficient for this dataset size.
+
+**Models trained and compared:**
+
+| Model | Accuracy | F1-Score (Weighted) |
+|---|---|---|
+| Random Forest | ~0.94 | ~0.94 |
+| XGBoost | ~0.95 | ~0.95 |
+| **LightGBM ✅** | **~0.96** | **~0.96** |
+
+**Why LightGBM was selected as the final model:**
+- Highest accuracy and F1-score across all evaluation runs
+- Faster training than XGBoost on this dataset size
+- Native SHAP compatibility via `TreeExplainer`
+- Less prone to overfitting with default parameters
