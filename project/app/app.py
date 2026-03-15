@@ -12,6 +12,7 @@ import base64
 import matplotlib.pyplot as plt
 from datetime import datetime
 import json
+
 # ============================================
 # CONFIGURATION DE LA PAGE
 # ============================================
