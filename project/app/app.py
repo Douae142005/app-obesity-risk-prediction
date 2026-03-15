@@ -347,7 +347,7 @@ with st.sidebar:
 page = st.session_state.page
 
 # ============================================
-# PAGE CONNEXION
+# PAGE du CONNEXION
 # ============================================
 if page == "🔐 Connexion":
     st.markdown("<h2 style='text-align:center'>🔐 Connexion Médecin</h2>", unsafe_allow_html=True)
