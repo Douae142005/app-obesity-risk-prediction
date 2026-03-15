@@ -169,3 +169,91 @@ The project brief recommended 4 models: Random Forest, XGBoost, LightGBM, and Ca
 - Faster training than XGBoost on this dataset size
 - Native SHAP compatibility via `TreeExplainer`
 - Less prone to overfitting with default parameters
+**Key design points:**
+- Each model evaluated with `accuracy_score` and `f1_score(average='weighted')` on `X_test`
+- `select_best_model()` picks the model with the highest accuracy
+- Individual confusion matrix saved per model in `models/`
+- `save_best_model()` serializes the winner via `joblib.dump()` to `models/best_model.pkl`
+- `random_state=42` set across all models and splits for full reproducibility
+
+---
+
+### II.9 — `src/evaluate_model.py` — Deep Evaluation
+
+Loads `best_model.pkl` and runs a complete diagnostic on the test set. Must be run after `train_model.py`.
+
+**Metrics computed:**
+- Accuracy, F1-Macro, F1-Weighted
+- ROC-AUC macro (One-vs-Rest via `label_binarize`)
+- Full `classification_report` with per-class precision / recall / F1
+
+**Clinical interpretation block** — automatic verdict printed to console:
+- 🟢 ROC-AUC ≥ 0.95 → reliable for clinical decision support
+- 🟡 0.85–0.95 → medical supervision recommended
+- 🔴 < 0.85 → not suitable for production
+
+---
+
+### II.10 — `tests/` — Automated Tests
+
+5 test files executed automatically via GitHub Actions on every push and pull request.
+
+| File | What it verifies |
+|---|---|
+| `test_app.py` | Streamlit app loads correctly, all required model files are present and accessible at startup |
+| `test_data_processing.py` | No NaN after `handle_missing_values()`, correct pipeline output shapes |
+| `test_evaluate_model.py` | Metrics computation runs without error, output values in valid range |
+| `test_memory_optimization.py` | `optimize_memory()` reduces memory usage and produces `float32`/`int32` dtypes |
+| `test_model.py` | `best_model.pkl` loads correctly and returns valid class predictions |
+
+`__init__.py` is included to make `tests/` a proper Python package, enabling pytest discovery across all files.
+
+---
+
+### II.11 — `Dockerfile` — Containerization
+
+Packages the full application for portable, environment-independent deployment.
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY project/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY project/ .
+EXPOSE 8501
+CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+```
+
+---
+
+### II.12 — `requirements.txt` — Dependencies
+
+```
+pandas
+numpy
+scikit-learn
+lightgbm
+xgboost
+shap
+streamlit
+matplotlib
+seaborn
+joblib
+ucimlrepo
+pytest
+```
+
+---
+
+## III. Installation & Usage
+
+### Prerequisites
+
+- Python 3.11+
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Douae142005/app-obesity-risk-prediction.git
+cd app-obesity-risk-prediction/project
+```
