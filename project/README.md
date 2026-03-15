@@ -3,7 +3,6 @@
 > **Coding Week · 09–15 March 2026 · École Centrale Casablanca**  
 > An explainable machine learning tool to help physicians estimate patient obesity risk based on lifestyle and physical conditions.
 
-![CI](https://github.com/Douae142005/app-obesity-risk-prediction/actions/workflows/ci.yml/badge.svg)
 
 ---
 
