@@ -593,7 +593,7 @@ elif page == "🧑 Espace Patient":
         st.markdown(f'<div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:0.7rem 1rem;margin:0.3rem 0;border-left:4px solid {color};"><b style="color:white;">{emoji} {niveau}</b><br><span style="color:rgba(255,255,255,0.7);font-size:0.88rem;">{desc}</span></div>', unsafe_allow_html=True)
 
 # ============================================
-# PAGE HISTORIQUE
+# PAGE HISTORIQUE 
 # ============================================
 elif page == "📋 Historique":
     if not st.session_state.connecte:
@@ -676,7 +676,7 @@ elif page == "📊 Statistiques":
         st.warning(f"⚠️ Dataset non disponible : {e}")
 
 # ============================================
-# PAGE ÉQUIPE
+# PAGE Notre ÉQUIPE
 # ============================================
 elif page == "👥 Notre Équipe":
     st.markdown("## 👥 Notre Équipe — TEAM DATA HEALERS")
